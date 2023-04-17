@@ -3,7 +3,6 @@ import httpModule from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 
-// Import event handlers
 import handleConnection from './events/connection.js';
 import handleDisconnect from './events/disconnect.js';
 import handleMessage from './events/message.js';
@@ -19,7 +18,6 @@ app.get('/', (request, response) => {
   response.sendFile(path.resolve('public', 'index.html'));
 });
 
-// Handle events
 io.on('connection', (socket) => {
   handleConnection(socket);
   handleDisconnect(socket);
