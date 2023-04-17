@@ -21,8 +21,14 @@ html {
     --sand: #fed9a6;
     --yellow: #ffffcc;
     --brouwn: #e5d8bd;
-    --pink: #fddaec;
+    --pink: #faddec;
     --white: #f2f2f2;
+}
+
+body,
+input,
+button {
+    font-family: "interstate", sans-serif;
 }
 
 body {
@@ -33,7 +39,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: "interstate", sans-serif;
 }
 
 header {
@@ -43,24 +48,31 @@ header {
 }
 
 main {
-    width: 50vw;
+    width: 80vw;
     height: 70vh;
     position: relative;
 
     background-color: var(--purpel);
-    border-radius:  8% 8% 8% 8% / 8% 8% 8% 8%;
-
-
+    border-radius: 8% 8% 8% 8% / 8% 8% 8% 8%;
 }
 
-main h1{
+@media(min-width: 500px){
+    main{
+        width: 30em;
+    }
+}
+
+main h1 {
     width: 100%;
     height: 7%;
     font-size: 2.5vw;
-    text-align: center;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* main section:first-of-type{
+main section:first-of-type {
     width: 100%;
     height: 100%;
     background-color: var(--white);
@@ -68,8 +80,191 @@ main h1{
     position: absolute;
 
     border-radius: 8% 8% 8% 8% / 8% 8% 8% 8%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-main section:first-of-type.hidden{
+main section:last-of-type.hidden,
+main section:first-of-type.hidden {
     display: none;
+}
+
+main section:first-of-type h2 {
+    height: 3em;
+    display: flex;
+    align-items: center;
+}
+
+main section:first-of-type form {
+    width: 80%;
+    height: 3em;
+    margin-bottom: 2em;
+}
+
+main section:first-of-type form input {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+    height: 100%;
+    border-radius: 3em;
+    padding-left: 1em;
+    border: none;
+}
+
+main section:first-of-type>button {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 40%;
+    height: 10%;
+    border: none;
+    border-radius: 5em;
+    background-color: var(--blue);
+    cursor: pointer;
+    transition: .5s;
+
+    visibility: hidden;
+}
+
+main section:first-of-type:has(form:valid)>button {
+    visibility: visible;
+}
+
+main section:first-of-type>button:hover {
+    background-color: var(--brouwn);
+}
+
+main section:first-of-type>button:active {
+    transform: scale(.8);
+}
+
+
+
+/* Chat page */
+
+main section:last-of-type{
+    width: 100%;
+    height: 93%;
+    padding: 1em 0;
+
+    background-image: linear-gradient(to top, transparent, var(--white));
+    border-radius: 8% 8% 8% 8% / 8% 8% 8% 8% ;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main section:last-of-type ul{
+    width: 95%;
+    height: 100%;
+
+    list-style: none;
+
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    margin-bottom: .5em;
+}
+
+main section:last-of-type ul::-webkit-scrollbar{
+    border-radius: 5em;
+    width: .5em;
+
+    display: none;
+}
+
+/* main section:last-of-type ul::-webkit-scrollbar-thumb{
+    background-color: var(--blue);
+    border-radius: 5em;
+    opacity: 0;
 } */
+
+main section:last-of-type ul li{
+    width: fit-content;
+    max-width: 90%;
+    height: fit-content;
+    padding: .5em;
+    margin-top:.5em;
+    background-color: var(--yellow);
+    border-radius: 1em ;
+    word-wrap:break-word;
+}
+
+main section:last-of-type ul li::first-letter{
+    text-transform:uppercase;
+}
+
+main section:last-of-type form {
+    width: 95%;
+    height: 3em;
+
+    position: sticky;
+    bottom: .5em;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+
+main section:last-of-type.focus form::after{
+    content: "writing...";
+    padding: .2em;
+    position: absolute;
+    color: rgb(56, 56, 56);
+    top: -1.7em;
+    left: 2em;
+
+    animation: writing 1s infinite both alternate;
+}
+
+@keyframes writing {
+    form{
+        color: rgb(56, 56, 56);
+    }
+    to{
+        color: var(--rosy);
+    }
+}
+
+main section:last-of-type form input {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 85%;
+    height: 100%;
+    border-radius: 3em;
+    padding-left: 1em;
+    border: none;
+}
+
+main section form button:focus,
+main section form input:focus{
+    outline-color: var(--rosy);
+    border:.5px solid var(--rosy);
+}
+
+main section:last-of-type form button {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 3.5em;
+    height: 3.5em;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: var(--white);
+    background-image: url(https://icons.veryicon.com/png/o/miscellaneous/utility/send-26.png);
+    background-position: 70% 50%;
+    background-repeat: no-repeat;
+    background-size: 70%;
+}
+
+main section:last-of-type form button:active{
+    background-color: var(--rosy);
+}

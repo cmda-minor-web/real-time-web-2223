@@ -3,6 +3,14 @@
 ## 👁️ Demo Link! 👁️
 rtw-groep-production.up.railway.app
 
+## 💻 Participants 💻 
+* Sundous Kanaan
+* Hilal Tapan
+
+## 🖊 Concept 🖊
+Chat.app is an environment where users can chat with each other. It is a project based on the course real time web course from the minor web, University of Amsterdam.
+
+
 
 
 ## Synopsis
