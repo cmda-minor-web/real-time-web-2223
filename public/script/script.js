@@ -18,7 +18,7 @@ console.log("userName", userName);
 submit.addEventListener('click', (event) => {
     event.preventDefault();
     if (input.value) {
-        socket.emit('chat message', input.value);
+        socket.emit('chat message',userName, input.value);
         input.value = '';
       }
 });
