@@ -34,6 +34,10 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('user disconnected')
     })
+
+    socket.on('focus', (hasFocus) => {
+        socket.broadcast.emit('focus', hasFocus);
+      });
 });
 
 
