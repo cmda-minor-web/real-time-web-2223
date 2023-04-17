@@ -48,10 +48,18 @@ socket.on('chat message', (msg) => {
 
     const element = document.createElement('li');
     element.textContent = ` ${msg.username}: ${msg.message} `;
-    element.classList.add('message')
     messages.appendChild(element);
     messages.scrollTop = messages.scrollHeight;
+
+    if (msg.username === usernameInput.value) {
+        element.classList.add('message');
+    }
+
 });
+
+
+
+
 
 socket.on('focus', (hasFocus) => {
     if (hasFocus) {
