@@ -9,6 +9,14 @@ const logginButton = document.querySelector('main section:first-of-type > button
 
 chatScreen.classList.add("hidden");
 
+// // Annuleer the enter event on the input
+usernameInput.addEventListener('keydown', (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      sendMessage.click();
+    }
+});
+
 logginButton.addEventListener('click' , () => {
     loggin.classList.add("hidden");
     chatScreen.classList.remove("hidden");

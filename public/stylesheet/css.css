@@ -56,12 +56,6 @@ main {
     border-radius: 8% 8% 8% 8% / 8% 8% 8% 8%;
 }
 
-@media(min-width: 500px){
-    main{
-        width: 30em;
-    }
-}
-
 main h1 {
     width: 100%;
     height: 7%;
@@ -70,6 +64,16 @@ main h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@media(min-width: 500px){
+    main{
+        width: 30em;
+    }
+
+    main h1{
+        font-size: 1.3em;
+    }
 }
 
 main section:first-of-type {
@@ -196,7 +200,7 @@ main section:last-of-type ul li{
 }
 
 main section:last-of-type ul li.message{
-    background-color: red;
+    background-color: var(--green);
 }
 
 main section:last-of-type ul li::first-letter{
