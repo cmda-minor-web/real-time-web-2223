@@ -19,7 +19,7 @@ input.addEventListener('input', () => {
     const inputValue = input.value;
     // Doe hier iets met de waarde van het invoerveld
     console.log(inputValue);
-    chatScreen.classList.add('focus')
+    // chatScreen.classList.add('focus')
 });
 
 
@@ -41,9 +41,10 @@ submit.addEventListener('click', (event) => {
 
 socket.on('chat message', (msg) => {
     console.log('chat message: ', msg.message);
+    chatScreen.classList.add('focus')
 
     const element = document.createElement('li');
-    element.textContent = ` ${msg.username} : ${msg.message} `;
+    element.textContent = ` ${msg.username}: ${msg.message} `;
 
     messages.appendChild(element);
     messages.scrollTop = messages.scrollHeight;
