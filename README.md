@@ -1,125 +1,381 @@
-# Real-Time Web @cmda-minor-web 2022 - 2023
+# Chat.App
+During this course we will learn how to build a real-time application. We will learn techniques to setup an open connection between the client and the server. This will enable us to send data in real-time both ways, at the same time.
 
 ## 👁️ Demo Link! 👁️
 rtw-groep-production.up.railway.app
+
+---
 
 ## 💻 Participants 💻 
 * Sundous Kanaan
 * Hilal Tapan
 
+---
+
 ## 🖊 Concept 🖊
 Chat.app is an environment where users can chat with each other. It is a project based on the course real time web course from the minor web, University of Amsterdam.
 
+---
+
+## 📖 Job Story 📖
+As a social media user, I want to connect with my friends and family through a secure chatting app, so that I can easily communicate with them.
+
+---
+
+## 💻 Intallation Guide 💻
+### Install nvm
+1. To install the server you need node and express. You can do that with nvm. Nvm is package installer where you can install different packages. With this code you can install the latest versions of npm and node in your terminal:
+```
+nvm install 19.8.1
+```
+
+### Clone repo
+2. Clone this repository by running:
+```
+git clone https://github.com/SundousKanaan/RTW-Groep.git
+```
+
+### NPM install
+3. Install the dependencies by running:
+```
+npm install 
+```
+
+### Start server 
+Run the following code to start the server: 
+```
+node app.js
+```
+
+---
+
+## 🛠️ Features Combined 🛠️
+* Users can chat together online
+* Can see if someone is typing
+* Can choose a username and which gets displayed with each message
+
+---
+
+## 💾 Used Technologies 💾
+* EJS templating engine
+* Node.js
+* Express
+* Socket.io
+
+---
+
+## Process
+### Getting started with socket.io
+1. The first goal is to set up a simple HTML webpage that serves out a form and a list of messages. We’re going to use the Node.JS web framework express to this end. Make sure Node.JS is installed.
+
+```
+npm install express@4
+```
+
+2. Once it's installed we can create an index.js file that will set up our application.
+```js
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+
+app.get('/', (req, res) => {
+  res.send('<h1>Hello world</h1>');
+});
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});
+```
+
+3. Integrate socket.io 
+```
+npm install socket.io
+```
+
+4. That will install the module and add the dependency to package.json. Now let’s edit index.js to add it:
+```js
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});
+```
+
+5. Add a script tag in your index.ejs file for.
+```html
+<script src="/socket.io/socket.io.js"></script>
+```
+
+6. To see connections and disconnections add this code to your server.js
+```js 
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+``` 
+
+7. Make it so that when the user types in a message, the server gets it as a chat message event. The client side js file should now look like this:
+```js
+  var socket = io();
+
+  var form = document.getElementById('form');
+  var input = document.getElementById('input');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (input.value) {
+      socket.emit('chat message', input.value);
+      input.value = '';
+    }
+  });
+```
+
+And in the server side js we now add the following code:
+```js
+io.on('connection', (socket) => {
+  socket.on('chat message', (msg) => {
+    console.log('message: ' + msg);
+  });
+});
+```
+
+---
+
+## Process
+### Trying to display a username
+One of our features is that the user can choose a username and this gets displayed with each message.
+
+#### Attempt 1
+This was our first attempt and it was a good start since it was quite complex. The thing here was that each user only saw their own username displayed. So Sundous only saw the name Sundous being displayed and Hilal only saw the name Hilal being displayed. 
+
+![attempt1](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/samen-chatten.png)
+
+#### Attempt 2
+After many tries we still had the same issue. 
+
+![attempt2](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/samen-chatten-2.png)
+
+#### Attempt 3
+Okay, improvement! It is working! The next step here was to put the username input field in another section and make a "log in" type of page.
+
+![attempt3](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/samen-chatten-3.png)
+
+#### Attempt 4
+After doing that the user gets in this chat environment where they only see the messages being displayed together with the usernames. So cool!
+
+![attempt4](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/samen-chatten-4.png)
+
+--- 
+
+### Is typing feature
+We thought it would be cool if the user would get information about when someone is typing, so we added this feature!
+
+![is-typing](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/samen-chatten-5.png)
+
+---
+
+### Different colors for each user
+When there are many people in the chatting area, it is hard to seperate each user. So we added different colors to each user.
+
+![colors](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/samen-chatten-6.png)
+
+---
+
+### Position of each user
+We thought it was important to display yourself on the right, and all the other users on the left, to fit the chatroom User Experience (UX). This really improved the chatting experience. 
+
+![location](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/samen-chatten-7.png)
+
+---
+
+## Server Side Code
+```js
+const express = require('express')
+const app = express()
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+const port = process.env.PORT || 4242
+
+app.set('views', 'views');
+app.set('view engine', 'ejs');
+app.use(express.static("public"))
+
+// home page
+app.get('/', async (req, res) => {
+    try {
+        res.render('index');
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+})
+
+// We passen het server script aan om een console bericht te loggen zodra 
+// er een gebruiker verbinding maakt met via socket.io, dat zie je aan het connection event.
+io.on('connection', (socket) => {
+    console.log('connected');
+
+    socket.on('chat message', (chat) => {
+        // console.log(`${username}: ${message}`);
+        io.emit('chat message', chat); // broadcast the message to all clients
+      });
+
+    // Als een gebruiker connectie maakt zie je de log message die we ingesteld hebben, 
+    // misschien willen we ook zien wanneer een gebruiker disconnect.
+    socket.on('disconnect', () => {
+        console.log('user disconnected')
+    })
+
+    socket.on('focus', (hasFocus) => {
+        socket.broadcast.emit('focus', hasFocus);
+      });
+});
+
+app.get('/', (request, response) => {
+    //   response.send('<h1>Hallo wereld! LOL</h1>')
+    response.render('index')
+})
+
+http.listen(port, () => {
+    console.log('listening on port:', port)
+})
+```
+
+### Breakdown of the code:
+
+* const express = require('express'): Imports the Express framework.
+* const app = express(): Creates a new instance of the Express application.
+* const http = require('http').createServer(app): Creates an HTTP server instance with the Express application.
+* const io = require('socket.io')(http): Initializes a Socket.io instance using the HTTP server.
+* const port = process.env.PORT || 4242: Sets the port number for the server to listen to, using the environment variable PORT or the default port 4242.
+* app.set('views', 'views');: Sets the folder for the views (HTML templates).
+* app.set('view engine', 'ejs');: Sets the view engine to EJS (Embedded JavaScript).
+* app.use(express.static("public")): Specifies that the server should serve static files from the "public" folder.
+* app.get('/', async (req, res) => { ... }): Handles GET requests to the root URL of the server. This route renders the "index" template using EJS.
+* io.on('connection', (socket) => { ... }): Handles socket connections. This event listener logs a "connected" message when a new user connects, broadcasts chat messages to all connected clients, and logs a "user disconnected" message when a user disconnects.
+* app.get('/', (request, response) => { ... }): Handles another GET request to the root URL of the server. * This route renders the "index" template using EJS.
+* http.listen(port, () => { ... }): Starts the server listening on the specified port.
+
+Overall, this code sets up a basic server with Socket.io integration to allow real-time communication between clients. It also uses the Express framework and EJS templating engine to serve static files and render HTML templates.
+
+--- 
+
+## Client Side Code
+```js
+const messages = document.querySelector('section ul');
+
+const input = document.querySelector('#message-input');
+const sendMessage = document.querySelector('#message-button');
+const usernameInput = document.querySelector('#username-input');
+const loggin= document.querySelector('main section:first-of-type')
+const chatScreen= document.querySelector('main section:last-of-type')
+const logginButton = document.querySelector('main section:first-of-type > button')
+
+chatScreen.classList.add("hidden");
+
+// // Annuleer the enter event on the input
+usernameInput.addEventListener('keydown', (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      sendMessage.click();
+    }
+});
+
+logginButton.addEventListener('click' , () => {
+    loggin.classList.add("hidden");
+    chatScreen.classList.remove("hidden");
+    socket.emit('focus', true); // Verzend de focus class naar andere clients
+});
+
+input.addEventListener('input', () => {
+    const inputValue = input.value;
+    // Doe hier iets met de waarde van het invoerveld
+    console.log(inputValue);
+    chatScreen.classList.add('focus');
+    socket.emit('focus', true); // Verzend de focus class naar andere clients
+});
+
+sendMessage.addEventListener('click', (event) => {
+    chatScreen.classList.remove('focus')
+    socket.emit('focus', false); // Verzend de focus class naar andere clients
+
+    event.preventDefault();
+    if (input.value) {
+
+        const chat ={
+            username: usernameInput.value,
+            message: input.value
+        }
+
+        socket.emit('chat message', chat);
+        input.value = '';
+    }
+});
+
+socket.on('chat message', (msg) => {
+    console.log('chat message: ', msg.message);
+    console.log(chatScreen);
+
+    const element = document.createElement('li');
+    element.textContent = ` ${msg.username}: ${msg.message} `;
+    messages.appendChild(element);
+    messages.scrollTop = messages.scrollHeight;
+
+    if (msg.username === usernameInput.value) {
+        element.classList.add('message');
+    }
+});
+
+socket.on('focus', (hasFocus) => {
+    if (hasFocus) {
+        chatScreen.classList.add('focus');
+    } else {
+        chatScreen.classList.remove('focus');
+    }
+});
+```
+
+### Breakdown of the code:
+* const messages = document.querySelector('section ul'); selects the <ul> element that contains the chat messages.
+* const input = document.querySelector('#message-input'); selects the <input> element where the user types their message.
+* const sendMessage = document.querySelector('#message-button'); selects the button that sends the message to the chat.
+* const usernameInput = document.querySelector('#username-input'); selects the <input> element where the user types their username.
+* const loggin= document.querySelector('main section:first-of-type') selects the first <section> element inside the <main> element, which contains the login form.
+* const chatScreen= document.querySelector('main section:last-of-type') selects the last <section> element inside the <main> element, which contains the chat screen.
+* const logginButton = document.querySelector('main section:first-of-type > button') selects the button inside the login form that submits the form.
+* chatScreen.classList.add("hidden"); hides the chat screen when the page is first loaded.
+* usernameInput.addEventListener('keydown', (event) => {...}) listens for the 'keydown' event on the username input field. If the user presses the Enter key, the event is prevented and the send message button is clicked.
+* logginButton.addEventListener('click' , () => {...}) listens for the 'click' event on the login button. When the button is clicked, the login form is hidden and the chat screen is shown. A socket.io event is emitted to inform other clients that this client has focused on the chat.
+* input.addEventListener('input', () => {...}) listens for the 'input' event on the message input field. * * When the user types something in the field, the chat screen is given the 'focus' class, and a socket.io event is emitted to inform other clients that this client has focused on the chat.
+* sendMessage.addEventListener('click', (event) => {...}) listens for the 'click' event on the send message button. When the button is clicked, the chat screen loses the 'focus' class, a socket.io event is emitted to inform other clients that this client has unfocused from the chat, and the message is sent to the server via a socket.io event.
+* socket.on('chat message', (msg) => {...}) listens for the 'chat message' event emitted by the server when a new message is received. The message is added to the <ul> element containing the chat messages, and the element is scrolled to the bottom.
+* socket.on('focus', (hasFocus) => {...}) listens for the 'focus' event emitted by the server when a client focuses or unfocuses from the chat. The chat screen is given or loses the 'focus' class accordingly.
+
+---
+
+## Prototype
+### Log in page
+![proto](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/prototype.png)
+
+### Chat area
+![proto](https://github.com/SundousKanaan/RTW-Groep/blob/hilal/readme-images/prototype-1.png)
 
 
-
-## Synopsis
-- Course: Real-Time Web
-- Course Coordinator: Justus Sturkenboom ([@ju5tu5](https://github.com/ju5tu5))
-- Minor Coordinator(s): Robert Spier ([@roberrrt-s](https://github.com/roberrrt-s)) & Vasilis van Gemert ([@vasilisvg](https://github.com/vasilisvg))
-- Lecturers: Shyanta Vleugel ([@shyanta](https://github.com/shyanta)) & Justus Sturkenboom ([@ju5tu5](https://github.com/ju5tu5))
-- Student Assistants: 
-- Credit: 3 ECTS credits
-- Academic year: 2022-2023
-- Programme: Communication and Multimedia Design (full time bachelor)
-- Language: Dutch instructions and English resources
-
-## Description
-During this course you will learn how to build a real-time application. You will learn techniques to setup an open connection between the client and the server. This will enable you to send data in real-time both ways, at the same time.
-
-## Communication
-- [Github](https://github.com/cmda-minor-web/real-time-web-2223)
-- [Microsoft Teams](https://teams.microsoft.com/l/channel/19%3a61df853840064eae8ae6fc2dc9fc4566%40thread.tacv2/09%2520Real%2520Time%2520Web?groupId=c8b97eb6-ad53-4531-ad66-5c3c6297951c&tenantId=0907bb1e-21fc-476f-8843-02d09ceb59a7)
-- [Brightspace](https://dlo.mijnhva.nl/d2l/home/456154)
-
-If you have questions:
-- [Look at the additional resources]()
-- [Use a search engine like startpage](https://www.startpage.com/)
-- [Ask questions on MS Teams](https://teams.microsoft.com/l/channel/19%3a61df853840064eae8ae6fc2dc9fc4566%40thread.tacv2/09%2520Real%2520Time%2520Web?groupId=c8b97eb6-ad53-4531-ad66-5c3c6297951c&tenantId=0907bb1e-21fc-476f-8843-02d09ceb59a7) (please help each other!)
-- [Contact a student-assisstant](#synopsis)
-- [Contact a lecturer](#synopsis)
-
-## Goals
-After finishing this program you can:
-- _deal with real-time complexity;_
-- _handle real-time client-server interaction;_
-- _handle real-time data management;_
-- _handle multi-user support._
-
-## Grading
-Your efforts will be graded using a single point rubric (see below). You will have to pass the criterion (centre column) to pass the course. During the test you will be consulted and will be given feedback on things we think deficient and things we think are an improvement on the criterion.
-
-| Deficiency | Criterion | Improvement |
-|:--|:--|:--|
-|  | *Project* Your app is working and published on Heroku. Your project is thoroughly documented in the `README.md` file in your repository. Included are a description of the data-lifecycle, real-time events and external data source used by your app. |  |
-|  | *Complexity* You’ve implemented enough real-time functionality for us to test your comprehension of the subject. A lot of functionality is self-written. You are able to manipulate online examples live. |  |
-|  | *Client-server interaction* By interacting with the app, a user can influence the data model of the server in real time by directly modifying data OR by influencing API requests between server and source. The student has set up the data manipulations. |  |
-|  | *Data management* The server maintains a data model and each client is continuously updated with the correct data. |  |
-|  | *Multi-user support* Multiple clients can connect to the server. Interaction works as expected and is not dependent on the number of clients. You can explain how your app approaches this. |  |
-
-## Programme
-
-### Daily Schedule
-To keep things simple we use a daily schedule that will be used during normal course days (monday/tuesday). We make exceptions for fridays, on these days a different schedule will be given.
-
-| Time | Who | Activity |
-|:--|:--|:--|
-| *~09:00* | *(Shyanta \|\| Justus)* | *Standup* |
-| 09:30 | Tribe *+(Shyanta \|\| Justus)* | Talk with crucial information (make sure you attend!) |
-| 11:00 | Tribe | Work on the (day)assignment |
-|  | Per table *+(Shyanta \|\| Justus)* | Standup |
-| 13:00 | Tribe *+(Student assistants)* | Continue work on the (day)assignment |
-| 16:00ish | Tribe | Wrapup |
-
-### Week 1 - Getting a grip
-Goal: Build and deploy a simple but unique real-time app
-
-#### Monday 17 April 
-**Talk subjects:** Hit the ground running... [(slides)](https://docs.google.com/presentation/d/1MLSch_uKNEDyfz7fo71jbJrprunxQwd9GtgTse8wWpo/edit?usp=sharing) Course objective and explanation of the assignment, examples from last year, explanation of real-time, (live coded) bare bone chat app and deployment on Heroku.\
-**Day assignment:** [(assignment)](./course/week-1.md#assignment-1-make-it-so) Make it so *(as a team)*: Implement (code/style/discuss/deploy) basic chat (or other realtime) functionality on your teampage!
-
-#### Tuesday 18 April
-**Talk subjects:** My first realtime web app! [(slides)]() Short recap, (local) data management, using (wire) flows for realtime web apps.\
-**Day assignment:** [(assignment)](./course/week-1.md#assignment-2-make-it-so) Make it so *(individually)*. i) Create (code/style/discuss/deploy) a chat app (or other realtime functionality) based on the examples and ii) add your own unique feature!
-
-#### Friday 21 april
-
-Friday afternoon we will have a [peer review session](./course/peer-review.md). You will read, comment and fire issues on each others code. Doing this is really good for your programming insight and helps others refining/refactoring their code.
-
-| Time | Who | Activity |
-|:--|:--|:--|
-| 14:00 | Tribe *+(Shyanta \|\| Justus)* | Peer review |
-
-### Week 2 - Sockets and data
-Goal: Store, manipulate and share data between server-client   
-
-#### Monday 24 April
-**Talk subjects:** Data driven development?! [(slides)]() Feedback about last week, final assignment and conditions (rubric), explanation of data management, Long polling vs Websockets. \
-**Day assignment:** [(assignment)](./course/week-2.md#assignment-1-proof-of-concept) (Proof of) Concept *(individually)*. i) Create a (3 > 1) concept based on existing data from an API and ii) map this data using modelling techniques.
-
-#### Tuesday 25 April
-**Talk subjects:** Above all else, show the data. [(slides)]() Securing real-time web apps, offline support, the publication/subscription model and (case study) Quek!\
-**Day assignment:** [(assignment)](./course/week-2.md#assignment-2-proof-of-concept) Proof of concept *(individually)*: i) Create (code/style/discuss/deploy) part of the core functionality for your concept and ii) show the  corresponding data lifecycle diagram.
-
-### Week 3 - Dealing with multiple users
-Goal: Handle data sharing and multi-user support 
-
-#### Monday 8 May
-**Talk subjects:** Roll your own... [(slides) ]() Data management, the functional programming trinity (map, filter and reduce). OAuth?!
-**Day assignment:** [(assignment)](./course/week-3.md#assignment-1-data-management)
-
-#### Tuesday 9 May
-**Talk subjects:** Not ignoring the UI-Stack! [(slides)](). Usability, feedback, feedforward etc. in real-time web apps, (case study) postNL loader and FAQ.
-**Day assignment:** [(assignment)](./course/week-3.md#assignment-2-user-testing)
-
-#### Friday 12 May
-We will have a final [peer review session](./course/peer-review.md). You will read, comment and fire issues on each others code. Doing this helps others dotting the i’s on their project.
-
-| Time | Who | Activity |
-|:--|:--|:--|
-| 14.00 | Tribe *+(Shyanta \|\| Justus)* | Peer review |
-| 15.30 | Tribe *+(Shyanta \|\| Justus)* | Finalize your assignment |
-| 16.00 | Tribe *+(Shyanta \|\| Justus)* | (drinks?!) |
 
 
 ## Sources
@@ -128,7 +384,7 @@ We will have a final [peer review session](./course/peer-review.md). You will re
 * https://www.git-tower.com/learn/git/faq/git-pull-origin-master
 * https://adaptable.io/ 
 * https://railway.app/ 
-
+* https://socket.io/get-started/chat/ 
 
 <!-- Here are some hints for your projects Readme.md! -->
 
