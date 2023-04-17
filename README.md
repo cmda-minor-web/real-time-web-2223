@@ -1,12 +1,9 @@
 # Real-Time Web @cmda-minor-web 2022 - 2023
 
-## Table of Contents
-- [Synopsis](#synopsis)
-- [Description](#description)
-- [Communication](#communication)
-- [Goals](#goals)
-- [Grading](#grading)
-- [Programme](#programme)
+## 👁️ Demo Link! 👁️
+rtw-groep-production.up.railway.app
+
+
 
 ## Synopsis
 - Course: Real-Time Web

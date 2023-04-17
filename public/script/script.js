@@ -3,12 +3,14 @@ const input = document.querySelector('#message-input');
 const submit = document.querySelector('#message-button');
 const usernameInput = document.querySelector('#username-input');
 const usernameSubmit = document.querySelector("#username-button");
+const loggin= document.querySelector('main section:first-of-type')
 var userNames=[];
 
 usernameSubmit.addEventListener('click', (event) => {
     event.preventDefault(); // voorkomt de standaardgedrag van het formulier
     userNames.push(usernameInput.value)
     console.log(userNames);
+    loggin.classList.add('hidden')
 })
 
 submit.addEventListener('click', (event) => {
