@@ -173,6 +173,9 @@ main section:last-of-type ul{
     overflow-y: scroll;
     scroll-behavior: smooth;
     margin-bottom: .5em;
+
+    display: flex;
+    flex-direction: column;
 }
 
 main section:last-of-type ul::-webkit-scrollbar{
@@ -201,6 +204,7 @@ main section:last-of-type ul li{
 
 main section:last-of-type ul li.message{
     background-color: var(--green);
+    align-self: end;
 }
 
 main section:last-of-type ul li::first-letter{
