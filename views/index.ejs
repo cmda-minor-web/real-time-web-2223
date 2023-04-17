@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io Chat App</title>
+</head>
+
+<body>
+    <header></header>
+    <main>
+        <h1>HOME PAGE</h1>
+        <section>
+            <ul id="messages"></ul>
+        </section>
+
+        <form action="">
+            <input type="text" name="message" id="message">
+            <button type="submit">submit</button>
+        </form>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+    </script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./script/script.js"></script>
+</body>
+</html>
