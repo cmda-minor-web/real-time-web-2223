@@ -24,9 +24,9 @@ app.get('/', async (req, res) => {
 io.on('connection', (socket) => {
     console.log('connected');
 
-    socket.on('chat message', (username, message) => {
-        console.log(`${username}: ${message}`);
-        io.emit('chat message', username, message); // broadcast the message to all clients
+    socket.on('chat message', (chat) => {
+        // console.log(`${username}: ${message}`);
+        io.emit('chat message', chat); // broadcast the message to all clients
       });
 
     // Als een gebruiker connectie maakt zie je de log message die we ingesteld hebben, 
