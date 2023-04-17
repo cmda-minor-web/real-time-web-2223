@@ -13,9 +13,10 @@ const io = new Server(http);
 const port = process.env.PORT || 3000;
 
 app.use(express.static(path.resolve('public')));
+app.set('view engine', 'ejs');
 
 app.get('/', (request, response) => {
-  response.sendFile(path.resolve('public', 'index.html'));
+  response.render('index');
 });
 
 io.on('connection', (socket) => {
