@@ -60,7 +60,7 @@ main h1{
     text-align: center;
 }
 
-main section:first-of-type{
+/* main section:first-of-type{
     width: 100%;
     height: 100%;
     background-color: var(--white);
@@ -72,4 +72,4 @@ main section:first-of-type{
 
 main section:first-of-type.hidden{
     display: none;
-}
+} */
