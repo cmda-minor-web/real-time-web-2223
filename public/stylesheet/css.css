@@ -25,16 +25,22 @@ html {
 
 body {
     background-color: var(--yellow);
-
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 header {
-    background-color: red;
+    background-color: var(--blue);
+
+    width: 50vw;
 }
 
 main {
-    background-color: blue;
+    background-color: var(--brouwn);
+    width: 50vw;
+    height: 70vh;
 }

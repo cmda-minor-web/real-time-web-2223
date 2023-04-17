@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,19 +8,29 @@
 
     <body>
         <header>
-            <h1>HOME PAGE</h1>
         </header>
         <main>
+            <h1>HOME PAGE</h1>
+            <section>
+                <form>
+                    <input type="text" id="username-input" placeholder="Enter your username">
+                    <button type="submit" id="username-button" value="Send">submit</button>
+                </form>
+            </section>
+            
+
             <section>
                 <ul></ul>
+                <form>
+                    <input type="text" name="message" id="message-input" placeholder="Chatting ...">
+                    <button type="submit" id="message-button">submit</button>
+                </form>
             </section>
-
-            <form>
-                <input type="text" name="message" id="message">
-                <button type="submit">submit</button>
-            </form>
         </main>
         <%- include("./partials/footer.ejs") -%>
+
+        <script src="/socket.io/socket.io.js"></script>
+       
     </body>
 
 </html>
