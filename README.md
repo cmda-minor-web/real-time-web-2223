@@ -1,5 +1,30 @@
 # Real-Time Web @cmda-minor-web 2022 - 2023
 
+```commandline
+git clone 
+```
+
+NPM, geüpdatet versies ophalen
+
+```commandline
+npm install
+```
+Project starten 
+
+```commandline
+npm start
+```
+
+Project starten met nodemon
+
+```commandline
+npm run dev
+```
+
+Week 1 bronnen
+- https://github.com/Hoa0/real-time-web-2223/blob/main/course/week-1.md#assignment-1-make-it-so
+- https://socket.io/get-started/chat/
+
 ## Table of Contents
 - [Synopsis](#synopsis)
 - [Description](#description)
