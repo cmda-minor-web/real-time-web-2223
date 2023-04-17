@@ -4,8 +4,6 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const port = process.env.PORT || 4242
 
-
-
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 app.use(express.static("public"))
@@ -45,6 +43,6 @@ app.get('/', (request, response) => {
     response.render('index')
 })
 
-http.listen(4242, () => {
-    console.log('listening on 4242')
+http.listen(port, () => {
+    console.log('listening on port:', port)
 })
