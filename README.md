@@ -116,6 +116,15 @@ We will have a final [peer review session](./course/peer-review.md). You will re
 | 15.30 | Tribe *+(Shyanta \|\| Justus)* | Finalize your assignment |
 | 16.00 | Tribe *+(Shyanta \|\| Justus)* | (drinks?!) |
 
+
+## Sources
+* https://www.npmjs.com/package/nodemon 
+* https://fonts.adobe.com/fonts/interstate 
+* https://www.git-tower.com/learn/git/faq/git-pull-origin-master
+* https://adaptable.io/ 
+* https://railway.app/ 
+
+
 <!-- Here are some hints for your projects Readme.md! -->
 
 <!-- Start out with a title and a description -->

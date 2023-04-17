@@ -3,34 +3,32 @@ const input = document.querySelector('#message-input');
 const submit = document.querySelector('#message-button');
 const usernameInput = document.querySelector('#username-input');
 const usernameSubmit = document.querySelector("#username-button");
-var userName;
+var userNames=[];
 
 usernameSubmit.addEventListener('click', (event) => {
     event.preventDefault(); // voorkomt de standaardgedrag van het formulier
-    userName = usernameInput.value;
-    console.log(userName);
+    userNames.push(usernameInput.value)
+    console.log(userNames);
 })
-
-
-console.log("userName", userName);
-
 
 submit.addEventListener('click', (event) => {
     event.preventDefault();
     if (input.value) {
-        socket.emit('chat message',userName, input.value);
+        socket.emit('chat message', input.value);
         input.value = '';
       }
 });
 
 socket.on('chat message', (msg) => {
-    console.log("userName", userName);
     console.log('chat message: ' + msg);
+    const currentUserName = userNames[userNames.length - 1]; // krijg de meest recente gebruikersnaam
+
     const element = document.createElement('li');
-    const name = document.createElement('p')
+    const userName = document.createElement('p')
     element.textContent = msg;
-    name.textContent = userName;
-    element.appendChild(name);
+    userName.textContent = currentUserName;
+
+    element.appendChild(userName);
     messages.appendChild(element);
     messages.scrollTop = messages.scrollHeight;
 });
