@@ -195,6 +195,10 @@ main section:last-of-type ul li{
     word-wrap:break-word;
 }
 
+main section:last-of-type ul li.message{
+    background-color: red;
+}
+
 main section:last-of-type ul li::first-letter{
     text-transform:uppercase;
 }
