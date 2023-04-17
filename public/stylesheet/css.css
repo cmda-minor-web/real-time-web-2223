@@ -54,6 +54,7 @@ main {
 
     background-color: var(--purpel);
     border-radius: 8% 8% 8% 8% / 8% 8% 8% 8%;
+    box-shadow: 0 0 .5em .5em var(--brouwn);
 }
 
 main h1 {
@@ -78,7 +79,7 @@ main h1 {
 
 main section:first-of-type {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 7%);
     background-color: var(--white);
 
     position: absolute;
