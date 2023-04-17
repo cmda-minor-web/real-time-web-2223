@@ -1,0 +1,16 @@
+h1 {
+  color: rgb(215, 136, 136);
+}
+
+section{
+  background-color: rgb(12, 104, 170);
+  height: 20em;
+}
+
+ul{
+  /* border: 1em solid black; */
+}
+
+ul>li{
+  color:pink;
+}
