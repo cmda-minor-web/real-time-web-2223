@@ -9,7 +9,7 @@ During this course we will learn how to build a real-time application. We will l
 ## 👁️ Demo Link! 👁️
 
 * live demo door [aptable.io](https://groepschatapp.adaptable.app/)
-* live demo door [railway.app/](rtw-groep-production.up.railway.app)
+* live demo door [railway.app](rtw-groep-production.up.railway.app)
 ---
 
 ## 💻 Participants 💻 
