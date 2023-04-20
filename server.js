@@ -24,16 +24,18 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log('a user connected')
-  // io.emit('history', history)
 
-  socket.on('message', (message) => {
-    // while (history.length > historySize) {
-    //   history.shift()
-    // }
-    // history.push(message)
+  socket.on('newMessage', (message) => {
 
-    io.emit('message', message)
-  })
+   io.emit('sendMessage', {message: message, user: socket.username});
+   })
+
+socket.on('newUser', (user) => {
+  socket.username = user;
+  console.log('User connected - Username: ' + socket.username);
+});
+
+
 
   socket.on('disconnect', () => {
     console.log('user disconnected')
