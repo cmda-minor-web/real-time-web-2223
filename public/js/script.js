@@ -3,7 +3,7 @@ let messages = document.querySelector('section ul')
 let input = document.querySelector('input')
 
 
-const username = window.prompt("Enter the username");
+const username = window.prompt("Enter your username");
 socket.emit('newUser', username);
 
 document.querySelector('form').addEventListener('submit', event => {
