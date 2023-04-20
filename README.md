@@ -1,4 +1,4 @@
-# Bookbuddies
+# BookBuddies
 
 (Description of the project)
 (Image of my project)
