@@ -1,7 +1,9 @@
 # BookBuddies
 
 BookBuddies wordt een chatroom app waar je boeken kunt bespreken met anderen. Daarnaast lijkt het mij ook leuk om een spelletje toe te voegen waar de kaft van het boek geblurd is en je moet raden welk boek het is.
+
 (Description of the project)
+
 (Image of my project)
 
 ## Table of Contents
