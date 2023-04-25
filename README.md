@@ -1,41 +1,68 @@
 # BookBuddies
 
-BookBuddies wordt een chatroom app waar je boeken kunt bespreken met anderen. Daarnaast lijkt het mij ook leuk om een spelletje toe te voegen waar de kaft van het boek geblurd is en je moet raden welk boek het is.
-
-(Description of the project)
+BookBuddies is een chatroom app waar je boeken kunt bespreken met anderen. Daarnaast lijkt het mij ook leuk om een spelletje toe te voegen waar de kaft van het boek geblurd is en je moet raden welk boek het is.
 
 (Image of my project)
 
 ## Table of Contents
 
-- [Description](#description)
-- [How to install this project](#how-to-install-this-project)
-- [How to use this project](#how-to-use-this-project)
-- [Features](#features)
-- [Coding style](#coding-style)
-  - [Html](#html)
-  - [CSS](#css)
-  - [Javascript](#javascript)
-- [About the API](#about-the-api)
-- [Three concepts](#three-concepts)
-  - [Data modelling/Data life cycle](#data-modelling-data-life-cycle)
-- [License](#license)
+- [Concept](#concept)
+- [Hoe installeer je dit project?](#hoe-installeer-je-dit-project)
+-
 
-## Description
+## Concep
 
-## How to install this project
+BookBuddies wordt een chatroom waar gebruikers boeken met elkaar kunnen bespreken. Ze kunnen een boek kiezen en daar dan een gesprek over starten in de chatroom. In de chatroom moet je kunnen zien wie er allemaal deelnemen aan het gesprek, wie er online zijn en wie er aan het typen zijn. Daarnaast moet je nieuwe chats aan kunnen maken voor nieuwe boeken, chat kunnen verlaten en prive gesprekken kunnen starten. Als laatste lijkt het mij leuk om een spelletje toe te voegen waar de kaft van het boek geblurd is en je moet raden welk boek het is.
 
-## How to use this project
+### Benodigde schermen
+
+- Beginscherm waar je je naam in kunt vullen, met het kiezen van een boek of het invullen van een ID van een andere chatroom
+- Overzicht van chats waar je aan deelneemt
+- Chatroom scherm
+- Spelletje scherm
+
+### Feedback
+
+Ik heb feedback gekregen op mijn concept om eerst te beginnen met het maken van het spelletje van het raden van de boeken. Daar kan ik dan uiteindelijk als dat werkt chatrooms aan koppelen. Zodat er een chatroom over het geraden boek begonnen kan worden. Inplaats van het spelletje multipul choice te maken, is het beter om er een input veld aan te koppelen. Hierin kan de titel van het boek ingevuld worden, deze title hoeft niet precies hetzelfde te zijn als de titel van het boek, omdat het anders te moeilijk wordt. Als de titel niet correct is kreeg ik de tip om het boek minder geblured te maken. Ook moet het ingevulde antwoord naar lowercase worden gemaakt, zodat het niet uitmaakt of de gebruiker een hoofdletter gebruikt of niet.
+
+## Hoe installeer je dit project?
+
+Om dit project te installeren moet je eerst de repository clonen naar je lokale machine. Dit doe je door een map te openen waar je de repository in wilt clonen. Vervolgens open je je terminal en typ je het volgende commando:
+
+```
+git clone https://github.com/Inevdhoven/real-time-web-2223.git
+```
+
+Nu moet je naar de map gaan waar je de repository in hebt gecloned. Dit doe je door het volgende commando in te typen:
+
+```
+cd real-time-web-2223
+```
+
+Om de dependencies te installeren moet je het volgende commando uitvoeren:
+
+```
+npm install
+```
+
+Om het project te starten moet je het volgende commando uitvoeren:
+
+```
+npm run dev
+```
+
+Open het project in je browser door naar localhost:4300 te gaan.
+
+## Hoe gebruik je dit project?
 
 ## Coding style
 
-Om ervoor te zorgen dat onze code overzichtelijk en netjes is, hebben we een aantal regels opgesteld. Deze regels zijn:
+Om ervoor te zorgen dat de code goed leesbaar is, heb ik een aantal regels opgesteld waar ik mij aan wil houden.
 
 **Html**
 
 - Schrijf semantische HTML en gebruik niet onnodige `<div>`'s
 - Schrijf comments waar nodig om de code te verduidelijken
-- Gebruik regelmatig formatters om de code op te schonen
 
 **CSS**
 
@@ -50,17 +77,19 @@ Om ervoor te zorgen dat onze code overzichtelijk en netjes is, hebben we een aan
 - Schrijf comments waar nodig om de code te verduidelijken
 - Gebruik arrow functions
 
-## About the API
+## Over de API
 
-De API die ik wil gaan gebruiken is de [Google Books API](https://developers.google.com/books/docs/v1/using). Deze API is een API die je toegang geeft tot de boeken die Google heeft. Je kunt hierdoor bijvoorbeeld de inhoud van een boek opvragen, maar ook de cover. De API is gratis te gebruiken, maar je moet wel een API key aanvragen. Deze API key is nodig om de API te kunnen gebruiken. De API key is gratis en je krijgt er 50.000 requests per dag bij. Dit is meer dan genoeg voor mijn project.
-
-## Three concepts
+De API die ik wil gaan gebruiken is de [Google Books API](https://developers.google.com/books/docs/v1/using). Dit is een API die je toegang geeft tot de boeken die Google beschikbaar heeft. Je kunt hierdoor bijvoorbeeld de inhoud van een boek opvragen, maar ook de cover. De API is gratis te gebruiken, maar je moet wel een API key aanvragen. Deze API key is nodig om de API te kunnen gebruiken. Met deze API key krijgt je 50.000 requests per dag.
 
 ### Data modelling/Data life cycle
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Dit project valt onder de MIT License. Voor meer informatie over de MIT License klik [hier](LICENSE).
+
+## Bronnen
+
+https://waelyasmina.medium.com/a-guide-into-using-handlebars-with-your-express-js-application-22b944443b65
 
 <!-- Here are some hints for your projects Readme.md! -->
 
