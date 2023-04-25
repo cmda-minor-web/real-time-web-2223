@@ -1,0 +1,16 @@
+<main class="guess-book">
+    <h2>Raad het boek</h2>
+    <p>Welkom <span>{{name}}</span>. Raad het boek van de genre <span>{{genre}}</span></p>
+    <section>
+        <div>
+            <img src="{{result.imageLinks.thumbnail}}" alt="{{result.title}}">
+        </div>
+        <form action="" method="post">
+            <label for="title">
+                Raad de title van het boek:
+                <input type="text" name="title" id="title">
+            </label>
+            <button type="submit" id="title-btn">Check</button>
+        </form>
+    </section>
+</main>
