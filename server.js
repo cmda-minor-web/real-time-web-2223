@@ -1,31 +1,31 @@
-/*
-https://socket.io/get-started/chat
-*/
 const {
   ifError
-} = require('assert')
-const express = require('express')
-const app = express()
-const http = require('http').createServer(app)
-const path = require('path')
-const io = require('socket.io')(http)
-const port = process.env.PORT || 3001
+} = require('assert');
+// Import required modules
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const path = require('path');
+const io = require('socket.io')(http);
 
-app.use(express.static(path.resolve('public')))
+// Set the port for the server to listen on
+const port = process.env.PORT || 3001;
+
+// Set up middleware to serve static files
+app.use(express.static(path.resolve('public')));
+
+// Set the view engine to ejs and set the views directory
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
+// Set up a route
 app.get('/', (req, res) => {
   res.render('index.ejs', {
-  //pageTitle: 'Home'
+    //pageTitle: 'Home'
   });
 })
 
-// route handler
-// app.get('/', (req, res) => {
-//   res.sendFile(__dirname + '/index.html');
-// });
-
+// Set up socket.io event handlers
 io.on('connection', (socket) => {
   console.log('a user connected')
 
@@ -52,14 +52,11 @@ io.on('connection', (socket) => {
   })
 })
 
-// function callApi(io) {
-//   io.emit('message', 'whatever')
-// }
-
 http.listen(port, () => {
   console.log('listening on port ', port)
 })
 
 /**
  * https://github.com/ju5tu5/barebonechat
+   https://socket.io/get-started/chat
  */
