@@ -12,11 +12,19 @@ const io = require('socket.io')(http)
 const port = process.env.PORT || 3001
 
 app.use(express.static(path.resolve('public')))
-const typers = {}
-// route handler
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+  res.render('index.ejs', {
+  //pageTitle: 'Home'
+  });
+})
+
+// route handler
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + '/index.html');
+// });
 
 io.on('connection', (socket) => {
   console.log('a user connected')
