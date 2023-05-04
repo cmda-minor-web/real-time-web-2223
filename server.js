@@ -3,8 +3,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import http from 'http';
 import handlebars from 'express-handlebars';
-import { router } from './router/routes.js';
+// import { router } from './router/routes.js';
 import { Server } from 'socket.io';
+import fetch from 'node-fetch';
 
 dotenv.config();
 
@@ -15,7 +16,6 @@ const io = new Server(server);
 const __dirname = path.resolve();
 const historySize = 50
 let history = []
-let randomBook = {}
 
 app.set('view engine', 'hbs');
 app.set('views', 'views')
@@ -30,9 +30,47 @@ app.engine('hbs', handlebars.engine({
     partialsDir: __dirname + '/views/partials',
 }))
 
+
+let books = [];
+let currentBook = {}
+
+async function chooseGenre(genre) {
+    const bookQueryByGenre = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&orderBy=relevance&maxResults=40&key=${process.env.API_KEY}`);
+    const result = await bookQueryByGenre.json();
+    return result.items.map((item) => item.volumeInfo);
+}
+
+function fetchRandomBook() {
+    const randomBookIndex = Math.floor(Math.random() * books.length);
+    return books[randomBookIndex];
+}
+
+app.get('/', async function (req, res) {
+    res.render('main', { layout: 'index' });
+});
+
+app.get('/raad-het-boek', async function (req, res) {
+    const name = req.query.username;
+    const genre = req.query.genre;
+
+    books = await chooseGenre(genre);
+    console.log('/raad-het-boek, ingeladen boeken: ' + books.length)
+
+    currentBook = fetchRandomBook()
+    console.log('/raad-het-boek, random boek: ' + currentBook)
+
+    res.render('genres', { layout: 'index', name: name, genre: genre, result: currentBook });
+});
+
 io.on('connection', (socket) => {
     console.log('a user connected');
-    socket.emit('history', history)
+
+    // Is er een currentBook? nee? dan fetchrandomBook
+    // wel? stuur het huidige currentBook naar de client
+    // OP DE CLIENT: voeg het boek toe aan de interface
+
+    socket.emit('history', history);
+    // console.log(res.locals.genre);
 
     socket.on('chat', (data) => {
         console.log(data);
@@ -48,9 +86,17 @@ io.on('connection', (socket) => {
         socket.broadcast.emit("typing", inputName);
     });
 
-    socket.on('tryTitleBook', (titleBook) => {
-        console.log(titleBook);
-
+    socket.on('tryTitleBook', async (titleBook) => {
+        console.log(titleBook.toLowerCase());
+        const guessedTitleBook = titleBook.toLowerCase();
+        const currentBookTitle = currentBook.title.toLowerCase();
+        if (guessedTitleBook === currentBookTitle) {
+            console.log('Gewonnen');
+            socket.emit('win', 'Gewonnen')
+        } else {
+            console.log('Verloren');
+            socket.emit('lose', 'Verloren')
+        }
     });
 
     socket.on('disconnect', () => {
@@ -58,7 +104,7 @@ io.on('connection', (socket) => {
     })
 });
 
-app.use('/', router);
+// app.use('/', router);
 
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);

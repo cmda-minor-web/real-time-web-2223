@@ -2,14 +2,40 @@ const socket = io();
 
 const titleBook = document.querySelector('input#title');
 const titleBtn = document.querySelector('button#title-btn');
+const guessBook = document.querySelector('.guess-book section');
+const guessBookImg = document.querySelector('.guess-book section div img');
+const guessForm = document.querySelector('.guess-book form');
 
-titleBtn.addEventListener('submit', (e) => {
+let loses = 0;
+
+titleBtn.addEventListener('click', (e) => {
   e.preventDefault();
   console.log(titleBook.value);
   socket.emit('tryTitleBook', titleBook.value);
 });
 
+socket.on('win', (data) => {
+  console.log(data);
+  guessBookImg.classList.add('win');
 
+  guessForm.remove();
+  guessBook.insertAdjacentHTML(
+    'beforeend',
+    '<p class="win">Gewonnen!</p> <form action="/chat"><button type="submit">Open chat</button></form>'
+  );
+});
+
+socket.on('lose', (data) => {
+  console.log(data);
+
+  loses++;
+  if (loses <= 3) {
+    guessBookImg.classList.add('lose' + loses);
+  } else if (loses === 4) {
+    guessBookImg.classList.add('lose4');
+  }
+
+});
 
 // let messages = document.querySelector('section ul');
 // let inputText = document.querySelector('input#message');
