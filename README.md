@@ -97,14 +97,16 @@ De API die ik wil gaan gebruiken is de [Google Books API](https://developers.goo
 ### Endpoints
 
 Om de 20 meest relevante thriller boeken op te halen kun je het volgende endpoint gebruiken:
+
 `https://www.googleapis.com/books/v1/volumes?q=subject:thriller&orderBy=relevance&maxResults=20&key=YOUR_API_KEY`
+
 Door bij q=subject:thriller het woord thriller te veranderen in een ander genre kun je de 20 boeken van dat genre ophalen. De genres die ik wil gaan gebruiken zijn: thriller, fantasy, romance en fiction.
 
 ### De response van de API call
 
 De response in Insomnia ziet er als volgt uit:
 
-![Insomnia response]()
+<img width="1439" alt="Insomnia response" src="https://user-images.githubusercontent.com/43877754/236639142-f4a532b5-1a71-4839-bb47-61d2bba4d50b.png">
 
 Het volledige response van een boek uit de lijst van 20 in JSON ziet er als volgt uit:
 
@@ -186,7 +188,7 @@ Hier kun je mijn data models bekijken:
 
 ### Versie 1
 
-![Data model versie 1]()
+![Datamodel Versie 1](https://user-images.githubusercontent.com/43877754/236639166-bcf0f59f-772f-4428-bbe8-214e7ac9bc8c.jpeg)
 
 ## Spike solution
 
@@ -216,6 +218,10 @@ app.get("/raad-het-boek", async function (req, res) {
 
 ## Data lifecycle diagram
 
+### Versie 1
+<img width="1426" alt="Data lifecycle diagram" src="https://user-images.githubusercontent.com/43877754/236639190-126fd2f5-b482-4f27-b669-b07a11b19989.png">
+<img width="785" alt="Data lifecycle diagram legenda" src="https://user-images.githubusercontent.com/43877754/236639192-90cecee8-b2bb-47e0-b0aa-d8a4f2bf69e2.png">
+
 ## Real-time events
 
 ## License
@@ -228,31 +234,3 @@ Dit project valt onder de MIT License. Voor meer informatie over de MIT License 
 - [Socket.io Documentatie](https://socket.io/docs/v4/client-installation/)
 - [Handleiding van het toevoegen van Handlebars](https://waelyasmina.medium.com/a-guide-into-using-handlebars-with-your-express-js-application-22b944443b65)
 - [Commandline code in terminal zetten](https://stackoverflow.com/questions/20303826/how-to-highlight-bash-shell-commands-in-markdown)
-
-<!-- Here are some hints for your projects Readme.md! -->
-
-<!-- Start out with a title and a description -->
-
-<!-- Add a nice image here at the end of the week, showing off your shiny frontend 📸 -->
-
-<!-- Add a link to your live demo in Github Pages 🌐-->
-
-<!-- replace the code in the /docs folder with your own, so you can showcase your work with GitHub Pages 🌍 -->
-
-<!-- Maybe a table of contents here? 📚 -->
-
-<!-- ☝️ replace this description with a description of your own work -->
-
-<!-- How about a section that describes how to install this project? 🤓 -->
-
-<!-- ...but how does one use this project? What are its features 🤔 -->
-
-<!-- What external data source is featured in your project and what are its properties 🌠 -->
-
-<!-- This would be a good place for your data life cycle ♻️-->
-
-<!-- Maybe a checklist of done stuff and stuff still on your wishlist? ✅ -->
-
-<!-- We all stand on the shoulders of giants, please link all the sources you used in to create this project. -->
-
-<!-- How about a license here? When in doubt use MIT. 📜  -->
