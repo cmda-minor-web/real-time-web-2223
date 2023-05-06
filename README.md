@@ -6,11 +6,26 @@ BookBuddies is een app waar je boeken kunt raden en er vervolgens een chatroom o
 
 Bekijk mijn live demo [hier](https://bookbuddies.adaptable.app/).
 
-## Table of Contents
+## Inhoud
 
 - [Concept](#concept)
+- [Benodigde schermen](#benodigde-schermen)
+- [Feedback](#feedback)
 - [Hoe installeer je dit project?](#hoe-installeer-je-dit-project)
--
+- [Live zetten](#live-zetten)
+- [Hoe gebruik je dit project?](#hoe-gebruik-je-dit-project)
+- [Coding style](#coding-style)
+- [Over de API](#over-de-api)
+  - [Endpoints](#endpoints)
+  - [De response van de API call](#de-response-van-de-api-call)
+- [Data modelling](#data-modelling)
+  - [Versie 1](#versie-1)
+- [Spike solution](#spike-solution)
+- [Data lifecycle diagram](#data-lifecycle-diagram)
+  - [Versie 1](#versie-1)
+- [Real-time events](#real-time-events)
+- [License](#license)
+- [Bronnen](#bronnen)
 
 ## Concept
 
@@ -219,7 +234,11 @@ app.get("/raad-het-boek", async function (req, res) {
 ## Data lifecycle diagram
 
 ### Versie 1
+
 <img width="1426" alt="Data lifecycle diagram" src="https://user-images.githubusercontent.com/43877754/236639190-126fd2f5-b482-4f27-b669-b07a11b19989.png">
+
+#### Legenda:
+
 <img width="785" alt="Data lifecycle diagram legenda" src="https://user-images.githubusercontent.com/43877754/236639192-90cecee8-b2bb-47e0-b0aa-d8a4f2bf69e2.png">
 
 ## Real-time events
