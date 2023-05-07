@@ -3,7 +3,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import http from 'http';
 import handlebars from 'express-handlebars';
-// import { router } from './router/routes.js';
 import { Server } from 'socket.io';
 import fetch from 'node-fetch';
 
@@ -50,7 +49,7 @@ app.get('/', async function (req, res) {
 });
 
 app.get('/raad-het-boek', async function (req, res) {
-    const name = req.query.username;
+    const username = req.query.username;
     const genre = req.query.genre;
 
     books = await chooseGenre(genre);
@@ -59,7 +58,17 @@ app.get('/raad-het-boek', async function (req, res) {
     currentBook = fetchRandomBook()
     console.log('/raad-het-boek, random boek: ' + currentBook)
 
-    res.render('genres', { layout: 'index', name: name, genre: genre, result: currentBook });
+    res.render('genres', { layout: 'index', name: username, genre: genre, result: currentBook });
+});
+
+app.get('/chat-:data', async function (req, res) {
+    const username = req.query.username;
+    const genre = req.query.genre;
+    const currentBook = req.query.currentBook;
+
+    console.log(currentBook, username, genre);
+
+    res.render('chat', { layout: 'index', name: username, genre: genre, result: currentBook });
 });
 
 io.on('connection', (socket) => {
@@ -68,6 +77,14 @@ io.on('connection', (socket) => {
     // Is er een currentBook? nee? dan fetchrandomBook
     // wel? stuur het huidige currentBook naar de client
     // OP DE CLIENT: voeg het boek toe aan de interface
+
+    // const { username, genre } = socket.handshake;
+
+    console.log(socket.handshake);
+
+    // console.log('Username: ' + username);
+    // console.log('Genre: ' + genre);
+    // socket.emit('userData', { username: socket.req.query.username, genre: socket.req.query.genre });
 
     socket.emit('history', history);
     // console.log(res.locals.genre);
@@ -89,13 +106,14 @@ io.on('connection', (socket) => {
     socket.on('tryTitleBook', async (titleBook) => {
         console.log(titleBook.toLowerCase());
         const guessedTitleBook = titleBook.toLowerCase();
-        const currentBookTitle = currentBook.title.toLowerCase();
-        if (guessedTitleBook === currentBookTitle) {
+        const currentBookTitle = currentBook.title;
+        const currentBookTitleLowerCase = currentBook.title.toLowerCase();
+        if (guessedTitleBook === currentBookTitleLowerCase) {
             console.log('Gewonnen');
-            socket.emit('win', 'Gewonnen')
+            socket.emit('win', currentBookTitle)
         } else {
             console.log('Verloren');
-            socket.emit('lose', 'Verloren')
+            socket.emit('lose', currentBookTitle)
         }
     });
 
@@ -103,8 +121,6 @@ io.on('connection', (socket) => {
         console.log('user disconnected')
     })
 });
-
-// app.use('/', router);
 
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
