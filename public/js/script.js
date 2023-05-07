@@ -9,6 +9,7 @@ const username = window.name;
 const genre = window.genre;
 
 let loses = 0;
+let guessedBook;
 
 function guessNewBook() {
   const retryBtn = document.querySelector('.retry');
@@ -29,12 +30,13 @@ if (titleBtn) {
 socket.on('win', (data) => {
   console.log(data);
   console.log(window)
+  guessedBook = data;
   guessBookImg.classList.add('win');
 
   guessForm.remove();
   guessBook.insertAdjacentHTML(
     'beforeend',
-    `<p class="win">Gewonnen! Het antwoord was ${data}</p> <form action="/chat-${data}"><input type="hidden" name="name" value="${username}"><input type="hidden" name="genre" value="${genre}"><input type="hidden" name="currentBook" value="${data}"><button type="submit">Open chat</button></form> <button class="retry" type="submit">Raad een nieuw boek</button>`
+    `<p class="win">Gewonnen! Het antwoord was ${guessedBook}</p> <form action="/chat-${guessedBook}"><input type="hidden" name="name" value="${username}"><input type="hidden" name="genre" value="${genre}"><input type="hidden" name="currentBook" id="book-title" value="${guessedBook}"><button type="submit">Open chat</button></form> <button class="retry" type="submit">Raad een nieuw boek</button>`
   );
   const tryAgainText = document.querySelector('.tryagian-text');
   if (tryAgainText) {
@@ -72,6 +74,11 @@ let inputText = document.querySelector('.chat input#message');
 let send = document.querySelector('.chat button#send');
 let typingState = document.querySelector('.chat p');
 let chatForm = document.querySelector('.chat form');
+const bookTitle = document.querySelector('input#book-title');
+
+console.log('CLIENT:' + bookTitle.value);
+
+socket.emit('guessedBook', guessedBook);
 
 // send text
 if (chatForm) {

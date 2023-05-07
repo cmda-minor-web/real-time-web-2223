@@ -89,7 +89,14 @@ io.on('connection', (socket) => {
     socket.emit('history', history);
     // console.log(res.locals.genre);
 
+    socket.on('guessedBook', (guessedBook) => {
+        console.log('TEST: ' + guessedBook);
+        socket.broadcast.emit('guessedBook', guessedBook);
+    });
+
     socket.on('chat', (data) => {
+        var guessedBook = data.guessedBook;
+        console.log('TEST: ' + guessedBook);
         console.log(data);
         while (history.length > historySize) {
             history.shift()
