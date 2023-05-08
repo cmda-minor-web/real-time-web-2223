@@ -29,12 +29,15 @@ app.engine('hbs', handlebars.engine({
     partialsDir: __dirname + '/views/partials',
 }))
 
-
+let username;
+let users = [];
+let genre;
 let books = [];
-let currentBook = {}
+let currentBook = {};
+let activeRooms = [];
 
 async function chooseGenre(genre) {
-    const bookQueryByGenre = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&orderBy=relevance&maxResults=40&key=${process.env.API_KEY}`);
+    const bookQueryByGenre = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&orderBy=relevance&maxResults=10&key=${process.env.API_KEY}`);
     const result = await bookQueryByGenre.json();
     return result.items.map((item) => item.volumeInfo);
 }
@@ -49,62 +52,60 @@ app.get('/', async function (req, res) {
 });
 
 app.get('/raad-het-boek', async function (req, res) {
-    const username = req.query.username;
-    const genre = req.query.genre;
+    username = req.query.username;
+    genre = req.query.genre;
 
-    books = await chooseGenre(genre);
+    console.log('Users: ' + JSON.stringify(users));
+    console.log(JSON.stringify(users.map((user) => user.username)));
+    const user = users.find((user) => user.username === username);
+    console.log('User: ' + JSON.stringify(user));
+
+    if (!user) {
+        console.log('User not found');
+        res.redirect('/');
+        return;
+    }
+
+    console.log('/raad-het-boek123, username: ' + username, 'genre: ' + genre)
+
+    // books = await chooseGenre(genre);
     console.log('/raad-het-boek, ingeladen boeken: ' + books.length)
 
-    currentBook = fetchRandomBook()
+    // currentBook = fetchRandomBook()
     console.log('/raad-het-boek, random boek: ' + currentBook)
 
     res.render('genres', { layout: 'index', name: username, genre: genre, result: currentBook });
 });
 
-app.get('/chat-:data', async function (req, res) {
-    const username = req.query.username;
-    const genre = req.query.genre;
-    const currentBook = req.query.currentBook;
+app.get('/chat/:roomName', async function (req, res) {
+    // const username = req.query.username;
+    // const genre = req.query.genre;
+    // const currentBook = req.query.currentBook;
 
-    console.log(currentBook, username, genre);
+    console.log('Chatroom ' + username, genre);
 
     res.render('chat', { layout: 'index', name: username, genre: genre, result: currentBook });
 });
 
 io.on('connection', (socket) => {
     console.log('a user connected');
+    // console.log('testestest ' + username)
 
-    // Is er een currentBook? nee? dan fetchrandomBook
-    // wel? stuur het huidige currentBook naar de client
-    // OP DE CLIENT: voeg het boek toe aan de interface
+    socket.on('newUser', (data) => {
+        console.log('DATA ' + JSON.stringify(data))
+        console.log('new user: ' + data.username + ' ' + data.genre);
+        genre = data.genre;
+        const user = {
+            username: data.username,
+            genre: data.genre,
+            id: socket.id
+        }
+        users.push(user);
 
-    // const { username, genre } = socket.handshake;
-
-    // console.log(socket.handshake);
-
-    // console.log('Username: ' + username);
-    // console.log('Genre: ' + genre);
-    // socket.emit('userData', { username: socket.req.query.username, genre: socket.req.query.genre });
+        io.emit('users', users);
+    });
 
     socket.emit('history', history);
-    // console.log(res.locals.genre);
-
-
-    // socket.on('chat', (data) => {
-    //     var guessedBook = data.guessedBook;
-    //     console.log('TEST: ' + guessedBook);
-    //     console.log(data);
-    //     while (history.length > historySize) {
-    //         history.shift()
-    //     }
-    //     history.push(data)
-    //     io.sockets.emit("chat", data);
-    // });
-
-    // socket.on('typing', (inputName) => {
-    //     console.log("Aan het typen");
-    //     socket.broadcast.emit("typing", inputName);
-    // });
 
     socket.on('tryTitleBook', async (titleBook) => {
         console.log(titleBook.toLowerCase());
@@ -121,8 +122,40 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createRoom', (roomName) => {
-        socket.join(roomName);
-        console.log(`Socket ${socket.id} created and joined room ${roomName}`);
+        console.log(`Creating room ${roomName} for user ${username}`);
+        const socketRooms = socket.rooms;
+        console.log('socket rooms' + socketRooms);
+        if (!roomName) {
+            console.log('No roomname');
+            return;
+        }
+
+        if (activeRooms.includes(roomName)) {
+            console.log(`User ${username} joined room ${roomName}`);
+            socket.join(`${roomName}`);
+            socket.emit("roomJoined", roomName, username);
+        } else {
+            console.log(`Room ${roomName} does not exist`);
+            activeRooms.push(roomName);
+            console.log('Activerooms:' + activeRooms);
+            socket.emit('roomCreated', roomName, username);
+        }
+    });
+
+    socket.on('chat', (data) => {
+        let guessedBook = data.guessedBook;
+        console.log('TEST: ' + guessedBook);
+        console.log(data + ' username: ' + username);
+        while (history.length > historySize) {
+            history.shift()
+        }
+        history.push(data)
+        io.sockets.emit("chat", data, username);
+    });
+
+    socket.on('typing', (inputName) => {
+        console.log("Aan het typen");
+        socket.broadcast.emit("typing", inputName);
     });
 
     socket.on('disconnect', () => {
