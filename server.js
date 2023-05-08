@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
 
     // const { username, genre } = socket.handshake;
 
-    console.log(socket.handshake);
+    // console.log(socket.handshake);
 
     // console.log('Username: ' + username);
     // console.log('Genre: ' + genre);
@@ -89,26 +89,22 @@ io.on('connection', (socket) => {
     socket.emit('history', history);
     // console.log(res.locals.genre);
 
-    socket.on('guessedBook', (guessedBook) => {
-        console.log('TEST: ' + guessedBook);
-        socket.broadcast.emit('guessedBook', guessedBook);
-    });
 
-    socket.on('chat', (data) => {
-        var guessedBook = data.guessedBook;
-        console.log('TEST: ' + guessedBook);
-        console.log(data);
-        while (history.length > historySize) {
-            history.shift()
-        }
-        history.push(data)
-        io.sockets.emit("chat", data);
-    });
+    // socket.on('chat', (data) => {
+    //     var guessedBook = data.guessedBook;
+    //     console.log('TEST: ' + guessedBook);
+    //     console.log(data);
+    //     while (history.length > historySize) {
+    //         history.shift()
+    //     }
+    //     history.push(data)
+    //     io.sockets.emit("chat", data);
+    // });
 
-    socket.on('typing', (inputName) => {
-        console.log("Aan het typen");
-        socket.broadcast.emit("typing", inputName);
-    });
+    // socket.on('typing', (inputName) => {
+    //     console.log("Aan het typen");
+    //     socket.broadcast.emit("typing", inputName);
+    // });
 
     socket.on('tryTitleBook', async (titleBook) => {
         console.log(titleBook.toLowerCase());
@@ -116,12 +112,17 @@ io.on('connection', (socket) => {
         const currentBookTitle = currentBook.title;
         const currentBookTitleLowerCase = currentBook.title.toLowerCase();
         if (guessedTitleBook === currentBookTitleLowerCase) {
-            console.log('Gewonnen');
+            console.log('Gewonnen', currentBookTitle);
             socket.emit('win', currentBookTitle)
         } else {
             console.log('Verloren');
             socket.emit('lose', currentBookTitle)
         }
+    });
+
+    socket.on('createRoom', (roomName) => {
+        socket.join(roomName);
+        console.log(`Socket ${socket.id} created and joined room ${roomName}`);
     });
 
     socket.on('disconnect', () => {
