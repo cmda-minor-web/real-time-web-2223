@@ -13,17 +13,18 @@ const port = process.env.PORT || 4400;
 const server = http.createServer(app);
 const io = new Server(server);
 const __dirname = path.resolve();
-const historySize = 50
+const historySize = 50;
+const assignedBooks = new Map();
 
 let history = []
 // let firstUserGenre = {};
 let username;
+let currentUser;
 let users = [];
 let genre = 'thriller';
 let books = [];
 let currentBook = {};
 let activeRooms = [];
-let guessBook = {};
 
 app.set('view engine', 'hbs');
 app.set('views', 'views')
@@ -95,7 +96,6 @@ app.get('/chat/:roomName', async function (req, res) {
 io.on('connection', (socket) => {
     console.log('a user connected');
     // console.log('testestest ' + username)
-    socket.emit('genre', genre)
 
     socket.on('newUser', (data) => {
         console.log('DATA ' + JSON.stringify(data))
@@ -123,7 +123,8 @@ io.on('connection', (socket) => {
         const user = {
             username: data.username,
             // genre: data.genre,
-            id: socket.id
+            id: socket.id,
+            bookToCheck: ''
         }
         users.push(user);
         console.log('Users: ' + JSON.stringify(users));
@@ -138,19 +139,51 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('bookCheck', (usernameInput, bookTitleInput) => {
+        console.log('bookCheck Current User: ' + usernameInput);
+        users.forEach((user, i) => {
+            console.log(user);
+            console.log(usernameInput);
+            if (user.username == usernameInput) {
+                currentUser = usernameInput;
+                user.bookToCheck = bookTitleInput;
+                users[i] = user;
+            }
+        });
+
+        console.log(users);
+    });
+
+    console.log('Current User: ' + currentUser);
+    socket.emit('openChat', currentUser);
+
     socket.emit('history', history);
 
-    socket.on('setGenre', (data) => {
-        genre = data.genre;
+    // socket.on('setGenre', (data) => {
+    //     genre = data.genre;
 
-        io.emit('genre', genre);
-    })
+    //     io.emit('genre', genre);
+    // })
 
-    socket.on('tryTitleBook', async (titleBook) => {
+    socket.on('tryTitleBook', async (titleBook, usernameInput) => {
         console.log(titleBook.toLowerCase());
         const guessedTitleBook = titleBook.toLowerCase();
-        const currentBookTitle = currentBook.title;
-        const currentBookTitleLowerCase = currentBook.title.toLowerCase();
+        let book = '';
+        users.forEach((user, i) => {
+            if (user.username == usernameInput) {
+                console.log('ifejiwf ' + user.bookToCheck);
+                book = user.bookToCheck
+            }
+        });
+
+        const currentBookTitle = book;
+        console.log('currentBookTitle: ' + currentBookTitle);
+        const currentBookTitleLowerCase = currentBookTitle.toLowerCase();
+
+        // const currentBookTitle = users[usernameInput].bookToCheck;
+        // const currentBookTitleLowerCase = currentBookTitle.toLowerCase();
+        // const currentBookTitle = currentBook.title;
+        // const currentBookTitleLowerCase = currentBook.title.toLowerCase();
         if (guessedTitleBook === currentBookTitleLowerCase) {
             console.log('Gewonnen', currentBookTitle);
             socket.emit('win', currentBookTitle)
@@ -160,32 +193,11 @@ io.on('connection', (socket) => {
         }
     });
 
-    // socket.on('tryTitleBook', (data) => {
-    //     console.log('New titleBook: ' + data);
-
-    //     if (data.toLowerCase() === currentBook.toLowerCase()) {
-    //         socket.emit('win', currentBook); // Send currentBook to server
-    //     } else {
-    //         socket.emit('lose', currentBook); // Send currentBook to server
-    //     }
-    // });
-
-    // socket.on('chooseBook', (data) => {
-    //     chosenBooks[socket.id] = data; // store chosen book for this client
-    //     const allBooksChosen = Object.keys(io.sockets.connected).every((socketId) => {
-    //         return chosenBooks[socketId]; // check if all clients have chosen a book
-    //     });
-    //     if (allBooksChosen) {
-    //         const books = Object.values(chosenBooks); // get array of chosen books
-    //         io.emit('booksChosen', books); // broadcast chosen books to all clients
-    //     }
-    // });
-
-
     socket.on('createRoom', (roomName) => {
         console.log(`Creating room ${roomName} for user ${username}`);
         const socketRooms = socket.rooms;
         console.log('socket rooms' + socketRooms);
+        console.log('Current User test: ' + currentUser)
         if (!roomName) {
             console.log('No roomname');
             return;
@@ -203,12 +215,8 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.emit('openChat', username);
-
     socket.on('chat', (data) => {
-        let guessedBook = data.guessedBook;
-        console.log('TEST: ' + guessedBook);
-        console.log(data + ' username: ' + username);
+        console.log(JSON.stringify(data) + ' username: ' + username);
         while (history.length > historySize) {
             history.shift()
         }
@@ -217,7 +225,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('typing', (inputName) => {
-        console.log("Aan het typen");
+        console.log(inputName + " aan het typen...");
         socket.broadcast.emit("typing", inputName);
     });
 

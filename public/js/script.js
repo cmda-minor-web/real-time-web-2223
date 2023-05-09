@@ -12,6 +12,9 @@ const gameText = document.getElementById('game-text');
 const openChatButton = document.getElementById('open-chat');
 const retryButton = document.getElementById('retry');
 
+const bookTitleInput = document.querySelector('input[name="booktitle"]');
+const usernameInput = document.querySelector('input[name="username"]');
+
 let username;
 let currentUser;
 let genre;
@@ -21,9 +24,9 @@ let genreChosen = false;
 let loses = 0;
 let currentBook;
 
-window.addEventListener('beforeunload', () => {
-  sessionStorage.clear();
-});
+// window.addEventListener('beforeunload', () => {
+//   sessionStorage.clear();
+// });
 
 // Functions
 function guessNewBook() {
@@ -44,7 +47,7 @@ if (startGame) {
 
     username = inputUsername.value;
     // genre = selectGenre.value;
-    console.log(username);
+    // console.log(username);
     socket.emit('newUser', { username: username }); // Send username to server
 
     window.location.href = '/raad-het-boek'; // Redirect to game page
@@ -55,17 +58,21 @@ if (titleBtn) { // Check if titleBtn exists
   titleBtn.addEventListener('click', (e) => {
     e.preventDefault();
     console.log(titleBook.value);
-    socket.emit('tryTitleBook', titleBook.value); // Send titleBook to server
+    socket.emit('tryTitleBook', titleBook.value, usernameInput.value); // Send titleBook to server
   });
 }
 
+// console.log(usernameInput);
+if (window.location.pathname === '/raad-het-boek') {
+  socket.emit('bookCheck', usernameInput.value, bookTitleInput.value);
+}
+// console.log('Book to check: ' + bookTitleInput.value);
 
 // Socket events
 socket.on('users', (data) => {
   users = data;
-  console.log('Users' + users);
+  console.log('Users' + JSON.stringify(users));
 });
-
 
 socket.on('win', (data) => {
   console.log('Win' + data);
@@ -109,7 +116,6 @@ socket.on('lose', (data) => {
 if (openChatButton) {
   openChatButton.addEventListener('click', (e) => {
     if (!currentBook) return; // Check if currentBook exists
-    console.log('test ' + currentBook + ' username ' + currentUser);
     const roomName = currentBook; // Set roomName to currentBook
     socket.emit('createRoom', roomName); // Create room
     console.log('Room created: ' + roomName);
@@ -117,12 +123,12 @@ if (openChatButton) {
 }
 
 socket.on('roomCreated', (roomName, username) => {
-  console.log('Room created: ' + roomName + ' with user ' + currentUser);
+  console.log('Room created: ' + roomName + ' with user ' + username);
   window.location.href = '/chat/' + roomName; // Redirect to chat page
 });
 
 socket.on("roomJoined", ({ roomName, username }) => {
-  console.log(`${currentUser} joined room ${roomName}`);
+  console.log(`${username} joined room ${roomName}`);
   console.log(roomName)
   window.location.href = '/chat/' + roomName;
 });
@@ -153,7 +159,7 @@ socket.on('openChat', (username) => {
 
 if (inputText) {
   inputText.addEventListener('keypress', () => {
-    socket.emit('typing', inputName.value)
+    socket.emit('typing', currentUser)
   })
 }
 
@@ -183,7 +189,7 @@ socket.on('typing', (inputName) => {
   typingState.innerHTML = (inputName + " is aan het typen...")
   setTimeout(() => {
     typingState.innerHTML = "";
-  }, 3000);
+  }, 5000);
 })
 
 function addMessage(data) {
