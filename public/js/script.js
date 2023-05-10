@@ -176,6 +176,7 @@ socket.on('chat', (data, username) => {
 
   // Check if the message is sent by the user
   if (data.name === username) {
+    console.log('Current user is: ' + username);
     li.classList.add('current-user');
   }
 
@@ -189,7 +190,7 @@ socket.on('typing', (inputName) => {
   typingState.innerHTML = (inputName + " is aan het typen...")
   setTimeout(() => {
     typingState.innerHTML = "";
-  }, 5000);
+  }, 10000);
 })
 
 function addMessage(data) {

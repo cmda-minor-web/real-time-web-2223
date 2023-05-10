@@ -96,6 +96,7 @@ app.get('/chat/:roomName', async function (req, res) {
 io.on('connection', (socket) => {
     console.log('a user connected');
     // console.log('testestest ' + username)
+    // socket.emit('genre', genre)
 
     socket.on('newUser', (data) => {
         console.log('DATA ' + JSON.stringify(data))
@@ -208,7 +209,7 @@ io.on('connection', (socket) => {
             socket.join(`${roomName}`);
             socket.emit("roomJoined", roomName, username);
         } else {
-            console.log(`Room ${roomName} does not exist`);
+            console.log(`Room ${roomName} does not exist yet + ${username}`);
             activeRooms.push(roomName);
             console.log('Activerooms:' + activeRooms);
             socket.emit('roomCreated', roomName, username);
@@ -225,7 +226,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('typing', (inputName) => {
-        console.log(inputName + " aan het typen...");
+        console.log(inputName + " aan het typen " + "...");
         socket.broadcast.emit("typing", inputName);
     });
 
