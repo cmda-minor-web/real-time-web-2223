@@ -71,8 +71,8 @@ if (startGame) { // Check if startGame exists
     const inputUsername = document.querySelector('input#username');
     username = inputUsername.value; // Set username to value of inputUsername
     socket.emit('newUser', { username: username }); // Send username to server
-    usernameSection.setAttribute('class', 'hidden'); // Show usernameSection
-    guessBookSection.setAttribute('class', 'show'); // Show guessBookSection
+    usernameSection.setAttribute('class', 'username hidden'); // Show usernameSection
+    guessBookSection.setAttribute('class', 'guess-book show'); // Show guessBookSection
 
     const usernameBookPage = document.querySelector('span.username');
 
@@ -114,8 +114,8 @@ if (openChatButton) {
     // socket.emit('createRoom', roomName); // Create room
     // console.log('Room created: ' + roomName);
 
-    bookSection.setAttribute('class', 'hidden'); // Hide bookSection
-    chatSection.setAttribute('class', 'show'); // Show chatSection
+    bookSection.setAttribute('class', 'guess-book hidden'); // Hide bookSection
+    chatSection.setAttribute('class', 'chat show'); // Show chatSection
   });
 }
 
