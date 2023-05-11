@@ -243,6 +243,7 @@ io.on('connection', (socket) => {
 
     socket.on('chat', (data) => {
         console.log(JSON.stringify(data) + ' username: ' + username);
+        username = data.username;
         while (history.length > historySize) {
             history.shift()
         }
@@ -251,9 +252,12 @@ io.on('connection', (socket) => {
         io.sockets.emit("chat", data, username);
     });
 
-    socket.on('typing', (inputName) => {
-        console.log(inputName + " aan het typen " + "...");
-        socket.broadcast.emit("typing", inputName);
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', data);
+    });
+
+    socket.on('stopTyping', () => {
+        socket.broadcast.emit('stopTyping');
     });
 
     socket.on('disconnect', () => {

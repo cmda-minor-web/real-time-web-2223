@@ -117,16 +117,19 @@ if (titleBtn) { // Check if titleBtn exists
 }
 
 if (openChatButton) {
-  const url = new URL(window.location.href);
-  const name = url.pathname.split("/")[2];
+  // const url = new URL(window.location.href);
+  // const name = url.pathname.split("/")[2];
   // console.log('Hiiiii' + name)
   openChatButton.addEventListener('click', (e) => {
     if (!currentBook) return; // Check if currentBook exists
     const roomName = currentBook; // Set roomName to currentBook
-    socket.emit('createRoom', roomName); // Create room
-    console.log('Room created: ' + roomName);
+    // socket.emit('createRoom', roomName); // Create room
+    // console.log('Room created: ' + roomName);
 
-    window.location.href = `/chat/${roomName}/${name}`; // Redirect to chat page
+    bookSection.setAttribute('class', 'hidden'); // Hide bookSection
+    chatSection.setAttribute('class', 'show'); // Show chatSection
+
+    // window.location.href = `/chat/${roomName}/${name}`; // Redirect to chat page
   });
 }
 
@@ -227,13 +230,28 @@ socket.on('chat', (data, username) => {
   messages.scrollTop = messages.scrollHeight
 })
 
-socket.on('typing', (inputName) => {
-  console.log(inputName);
-  typingState.innerHTML = (inputName + " is aan het typen...")
-  setTimeout(() => {
-    typingState.innerHTML = "";
-  }, 10000);
-})
+let typingTimer;
+const typingDelay = 3000;
+
+inputText.addEventListener('keydown', () => {
+  clearTimeout(typingTimer);
+
+  typingState.textContent = '';
+
+  typingTimer = setTimeout(() => {
+    socket.emit('stopTyping');
+  }, typingDelay);
+
+  socket.emit('typing', { username: username });
+});
+
+socket.on('typing', (data) => {
+  typingState.textContent = `${data.username} is typing...`;
+});
+
+socket.on('stopTyping', () => {
+  typingState.textContent = '';
+});
 
 function addMessage(data) {
   messages.appendChild(Object.assign(document.createElement('li'), { textContent: data.name + ': ' + data.message }))
