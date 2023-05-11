@@ -5,6 +5,7 @@ import http from 'http';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import fetch from 'node-fetch';
+import session from 'express-session';
 
 dotenv.config();
 
@@ -31,6 +32,11 @@ app.set('views', 'views')
 
 app.use('/', express.static(__dirname + '/'));
 app.use(express.static(path.resolve('public')));
+app.use(session({
+    secret: 'geheim',
+    resave: false,
+    saveUninitialized: true
+}));
 
 app.engine('hbs', handlebars.engine({
     layoutsDir: __dirname + '/views/layouts',
@@ -39,13 +45,13 @@ app.engine('hbs', handlebars.engine({
     partialsDir: __dirname + '/views/partials',
 }))
 
-async function chooseGenre(genre) {
-    const bookQueryByGenre = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&orderBy=relevance&maxResults=10&key=${process.env.API_KEY}`);
+async function fetchGenre(genre) {
+    const bookQueryByGenre = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&orderBy=relevance&maxResults=20&key=${process.env.API_KEY}`);
     const result = await bookQueryByGenre.json();
     return result.items.map((item) => item.volumeInfo);
 }
 
-function fetchRandomBook() {
+function getRandomBook() {
     const randomBookIndex = Math.floor(Math.random() * books.length);
     return books[randomBookIndex];
 }
@@ -54,53 +60,69 @@ app.get('/', async function (req, res) {
     res.render('main', { layout: 'index' });
 });
 
-app.get('/raad-het-boek', async function (req, res) {
-    // username = req.query.username;
-    // genre = req.query.genre;
+// app.get('/raad-het-boek', async function (req, res) {
+//     // username = req.query.username;
+//     // genre = req.query.genre;
 
-    // console.log('Users: ' + JSON.stringify(users));
-    // console.log(JSON.stringify(users.map((user) => user.username)));
-    // const userUsername = users.map((user) => user.username);
-    // const userGenre = users.map((user) => user.genre);
-    // console.log('User: ' + JSON.stringify(userUsername));
-    // console.log('Genre: ' + JSON.stringify(userGenre));
+//     // console.log('Users: ' + JSON.stringify(users));
+//     // console.log(JSON.stringify(users.map((user) => user.username)));
+//     // const userUsername = users.map((user) => user.username);
+//     // const userGenre = users.map((user) => user.genre);
+//     // console.log('User: ' + JSON.stringify(userUsername));
+//     // console.log('Genre: ' + JSON.stringify(userGenre));
 
 
-    if (!users) {
-        console.log('User not found');
-        res.redirect('/');
-        return;
-    }
+//     if (!users) {
+//         console.log('User not found');
+//         res.redirect('/');
+//         return;
+//     }
 
-    console.log('/raad-het-boek123, username: ' + username, 'genre: ' + genre)
+//     console.log('/raad-het-boek123, username: ' + username, 'genre: ' + genre)
 
-    books = await chooseGenre(genre);
-    console.log('/raad-het-boek, ingeladen boeken: ' + books.length)
+//     req.session.currentUser = username;
 
-    currentBook = fetchRandomBook()
-    console.log('/raad-het-boek, random boek: ' + currentBook)
+//     books = await chooseGenre(genre);
+//     console.log('/raad-het-boek, ingeladen boeken: ' + books.length)
 
-    res.render('genres', { layout: 'index', name: username, genre: genre, result: currentBook });
-});
+//     currentBook = fetchRandomBook()
+//     console.log('/raad-het-boek, random boek: ' + currentBook)
 
-app.get('/chat/:roomName', async function (req, res) {
-    // const username = req.query.username;
-    // const genre = req.query.genre;
-    // const currentBook = req.query.currentBook;
+//     res.render('main', { layout: 'index', name: username, genre: genre, result: currentBook });
+// });
 
-    console.log('Chatroom ' + username, genre);
+// app.get('/chat/:roomName/:username', async function (req, res) {
+//     // const username = req.query.username;
+//     // const genre = req.query.genre;
+//     // const currentBook = req.query.currentBook;
 
-    res.render('chat', { layout: 'index', name: username, genre: genre, result: currentBook });
-});
+//     console.log('Chatroom ' + username, genre);
+//     console.log('session: ' + req.session.currentUser)
+//     res.render('main', { layout: 'index', name: username, genre: genre, result: currentBook });
+// });
 
 io.on('connection', (socket) => {
     console.log('a user connected');
     // console.log('testestest ' + username)
     // socket.emit('genre', genre)
 
+    socket.on('getAPI', async () => {
+        books = await fetchGenre(genre);
+        // console.log('/raad-het-boek, ingeladen boeken: ' + books.length)
+
+        currentBook = getRandomBook()
+        console.log('/raad-het-boek, random boek: ' + JSON.stringify(currentBook));
+
+        console.log('Current Book: ' + currentBook)
+
+        // currentBook = JSON.stringify(randomBook);
+
+        socket.emit('randomBook', currentBook);
+    });
+
     socket.on('newUser', (data) => {
         console.log('DATA ' + JSON.stringify(data))
-        console.log('new user: ' + data.username + ' ' + data.genre);
+        console.log('new user: ' + data.username);
         username = data.username;
         // genre = data.genre;
 
@@ -142,6 +164,8 @@ io.on('connection', (socket) => {
 
     socket.on('bookCheck', (usernameInput, bookTitleInput) => {
         console.log('bookCheck Current User: ' + usernameInput);
+
+        // console.log('bookCheck Current User222222: ' + req.session.currentUser);
         users.forEach((user, i) => {
             console.log(user);
             console.log(usernameInput);
@@ -149,13 +173,14 @@ io.on('connection', (socket) => {
                 currentUser = usernameInput;
                 user.bookToCheck = bookTitleInput;
                 users[i] = user;
+                console.log('bookCheck ' + JSON.stringify(users));
             }
         });
 
         console.log(users);
     });
 
-    console.log('Current User: ' + currentUser);
+    // console.log('Current User: ' + currentUser);
     socket.emit('openChat', currentUser);
 
     socket.emit('history', history);
@@ -222,6 +247,7 @@ io.on('connection', (socket) => {
             history.shift()
         }
         history.push(data)
+        console.log('chat hallo ' + username + ' ' + data)
         io.sockets.emit("chat", data, username);
     });
 

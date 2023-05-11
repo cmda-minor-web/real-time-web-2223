@@ -1,5 +1,10 @@
 // Variables
 const socket = io();
+const usernameSection = document.querySelector('.username');
+const guessBookSection = document.querySelector('.guess-book');
+const chatSection = document.querySelector('.chat');
+
+const bookImage = document.querySelector('img.book-image');
 const formUsername = document.querySelector('form#form-username');
 const startGame = document.querySelector('button#start-game');
 const titleBook = document.querySelector('input#title');
@@ -15,6 +20,14 @@ const retryButton = document.getElementById('retry');
 const bookTitleInput = document.querySelector('input[name="booktitle"]');
 const usernameInput = document.querySelector('input[name="username"]');
 
+let messages = document.querySelector('.chat section ul');
+let inputName = document.querySelector('.chat input#username');
+let inputText = document.querySelector('.chat input#message');
+let send = document.querySelector('.chat button#send');
+let typingState = document.querySelector('.chat p');
+let chatForm = document.querySelector('.chat form');
+const bookTitle = document.querySelector('input#book-title');
+
 let username;
 let currentUser;
 let genre;
@@ -24,62 +37,122 @@ let genreChosen = false;
 let loses = 0;
 let currentBook;
 
-// window.addEventListener('beforeunload', () => {
-//   sessionStorage.clear();
-// });
-
 // Functions
 function guessNewBook() {
   // New book to guess
-  retryButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.reload(); // Reload page
-  });
+  // retryButton.addEventListener('click', (e) => {
+  //   e.preventDefault();
+  //   console.log('Show new book1' + JSON.stringify(currentBook.title));
+  //   getAPI();
+  //   showNewBook();
+  // });
 }
 
-// Events
-if (startGame) {
-  formUsername.addEventListener('submit', (e) => {
-    e.preventDefault();
+function getAPI() {
+  socket.emit('getAPI');
+}
 
+// Functie schrijven om afbeelding book te laten zien
+function showNewBook() {
+  // console.log('Show new book2' + currentBook);
+  gameText.setAttribute('class', 'hidden'); // Hide gameText
+  let image = JSON.stringify(currentBook.imageLinks.thumbnail);
+  console.log('Show new book3' + image);
+  image = image.replace(/\"/g, "");
+
+  bookImage.setAttribute('src', currentBook.image); // Set src of bookImage to data.image
+  bookImage.setAttribute('alt', currentBook.title); // Set alt of bookImage to data.title
+  bookImage.classList.remove('win'); // Remove win class from guessBookImg
+}
+
+getAPI();
+
+// Socket Events
+if (startGame) { // Check if startGame exists
+  formUsername.addEventListener('submit', (e) => { // Listen for submit event on formUsername
+    e.preventDefault();
     const inputUsername = document.querySelector('input#username');
-    // const selectGenre = document.querySelector('select#genre');
-
-    username = inputUsername.value;
-    // genre = selectGenre.value;
-    // console.log(username);
+    // console.log('set username: ' + inputUsername.value);
+    username = inputUsername.value; // Set username to value of inputUsername
+    // console.log('set username2: ' + username);
     socket.emit('newUser', { username: username }); // Send username to server
+    // window.location.href = `/raad-het-boek`; // Redirect to game page
+    usernameSection.setAttribute('class', 'hidden'); // Show usernameSection
+    guessBookSection.setAttribute('class', 'show'); // Show guessBookSection
 
-    window.location.href = '/raad-het-boek'; // Redirect to game page
+    const usernameBookPage = document.querySelector('span.username');
+
+    usernameBookPage.textContent = username; // Set textContent of usernameBookPage to username
+    let image = JSON.stringify(currentBook.imageLinks.thumbnail);
+    image = image.replace(/\"/g, "");
+    bookImage.setAttribute('src', image); // Set src of bookImage to data.image
+    bookImage.setAttribute('alt', currentBook.title); // Set alt of bookImage to data.title
+
+    bookTitleInput.value = currentBook.title; // Set value of bookTitleInput to data.title
+    usernameInput.value = username; // Set value of unsernameInput to username
+
+    console.log('Raad het boek 123' + username, bookTitleInput.value);
+    socket.emit('bookCheck', username, bookTitleInput.value);
   });
 }
+
+socket.on('randomBook', (data) => {
+  // console.log(JSON.stringify(data));
+  currentBook = data; // Set currentBook to data
+  console.log('Current randomBook: ' + JSON.stringify(currentBook))
+});
+
+socket.on('users', (data) => {
+  users = data;
+
+  console.log('Users' + JSON.stringify(users));
+});
 
 if (titleBtn) { // Check if titleBtn exists
-  titleBtn.addEventListener('click', (e) => {
+  titleBtn.addEventListener('click', (e) => { // Listen for click event on titleBtn
     e.preventDefault();
-    console.log(titleBook.value);
+    console.log("hallooo" + titleBook.value, usernameInput.value)
     socket.emit('tryTitleBook', titleBook.value, usernameInput.value); // Send titleBook to server
   });
 }
 
-// console.log(usernameInput);
-if (window.location.pathname === '/raad-het-boek') {
-  socket.emit('bookCheck', usernameInput.value, bookTitleInput.value);
-}
-// console.log('Book to check: ' + bookTitleInput.value);
+if (openChatButton) {
+  const url = new URL(window.location.href);
+  const name = url.pathname.split("/")[2];
+  // console.log('Hiiiii' + name)
+  openChatButton.addEventListener('click', (e) => {
+    if (!currentBook) return; // Check if currentBook exists
+    const roomName = currentBook; // Set roomName to currentBook
+    socket.emit('createRoom', roomName); // Create room
+    console.log('Room created: ' + roomName);
 
-// Socket events
-socket.on('users', (data) => {
-  users = data;
-  console.log('Users' + JSON.stringify(users));
+    window.location.href = `/chat/${roomName}/${name}`; // Redirect to chat page
+  });
+}
+
+socket.on('openChat', (currentUser) => {
+  // console.log('Open chat ' + currentUser);
+  // currentUser = usernameInput.value;
+  if (chatForm) {
+    chatForm.addEventListener('submit', event => {
+      event.preventDefault()
+      console.log('hahhahha' + currentUser)
+      let data = { name: username, message: inputText.value }
+      console.log('DATA is leuk' + data)
+      socket.emit('chat', data);
+      console.log(username, inputText.value);
+      inputText.value = '';
+    })
+  }
 });
+
 
 socket.on('win', (data) => {
   console.log('Win' + data);
   currentBook = data; // Set currentBook to data
 
   guessBookImg.classList.add('win'); // Add win class to guessBookImg
-  guessForm.remove(); // Remove guessForm
+  guessForm.setAttribute('class', 'hidden')
 
   gameText.setAttribute('class', 'show'); // Show gameText
   gameText.textContent = 'Gewonnen! Het antwoord was ' + currentBook; // Set textContent of gameText
@@ -113,15 +186,6 @@ socket.on('lose', (data) => {
   }
 });
 
-if (openChatButton) {
-  openChatButton.addEventListener('click', (e) => {
-    if (!currentBook) return; // Check if currentBook exists
-    const roomName = currentBook; // Set roomName to currentBook
-    socket.emit('createRoom', roomName); // Create room
-    console.log('Room created: ' + roomName);
-  });
-}
-
 socket.on('roomCreated', (roomName, username) => {
   console.log('Room created: ' + roomName + ' with user ' + username);
   window.location.href = '/chat/' + roomName; // Redirect to chat page
@@ -130,31 +194,7 @@ socket.on('roomCreated', (roomName, username) => {
 socket.on("roomJoined", ({ roomName, username }) => {
   console.log(`${username} joined room ${roomName}`);
   console.log(roomName)
-  window.location.href = '/chat/' + roomName;
-});
-
-
-let messages = document.querySelector('.chat section ul');
-let inputName = document.querySelector('.chat input#username');
-let inputText = document.querySelector('.chat input#message');
-let send = document.querySelector('.chat button#send');
-let typingState = document.querySelector('.chat p');
-let chatForm = document.querySelector('.chat form');
-const bookTitle = document.querySelector('input#book-title');
-
-socket.on('openChat', (username) => {
-  console.log('Open chat ' + username);
-  currentUser = username;
-  if (chatForm) {
-    chatForm.addEventListener('submit', event => {
-      event.preventDefault()
-      console.log('hahhahha' + currentUser)
-      let data = { name: currentUser, message: inputText.value }
-      socket.emit('chat', data);
-      console.log(currentUser, inputText.value);
-      inputText.value = '';
-    })
-  }
+  window.location.href = `/chat/${roomName}/${username}`; // Redirect to chat page
 });
 
 if (inputText) {
@@ -170,6 +210,8 @@ socket.on('history', (history) => {
 })
 
 socket.on('chat', (data, username) => {
+  const url = new URL(window.location.href);
+  const name = url.pathname.split("/")[3];
   let li = document.createElement('li');
   li.textContent = data.name + ': ' + data.message;
   console.log(data.name + ': ' + data.message)
