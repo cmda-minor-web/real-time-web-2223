@@ -6,7 +6,7 @@ BookBuddies is een app waar je boeken kunt raden en er vervolgens een chatroom o
 
 <br>
 
-Bekijk mijn live demo [hier](https://real-time-web-2223.up.railway.app/) 
+Bekijk mijn live demo [hier](https://real-time-web-2223.up.railway.app/)
 
 ## Inhoud
 
@@ -110,6 +110,14 @@ Om ervoor te zorgen dat de code goed leesbaar is, heb ik een aantal regels opges
 ## Over de API
 
 De API die ik wil gaan gebruiken is de [Google Books API](https://developers.google.com/books/docs/v1/using). Dit is een API die je toegang geeft tot de boeken die Google beschikbaar heeft. Je kunt hierdoor bijvoorbeeld de inhoud van een boek opvragen, maar ook de cover. De API is gratis te gebruiken, maar je moet wel een API key aanvragen. Deze API key is nodig om de API te kunnen gebruiken. Met deze API key krijgt je 50.000 requests per dag.
+
+### API key
+
+Om de covers van de boeken te kunnen zien heb je een API key nodig van de [Google Books API](https://developers.google.com/books/docs/v1/using). Google heeft een plek waar je al je API keys kunt aanmaken en dat is [hier](https://console.cloud.google.com/apis/credentials). Hier maak je een project aan en daar maak je dan nieuwe keys bij aan. Deze API key moet je in een .env bestand zetten. Dit bestand moet je zelf aanmaken in de root van je project. Het plaatsen van de code doe je als volgt:
+
+```
+API_KEY=YOUR_API_KEY
+```
 
 ### Endpoints
 
@@ -244,6 +252,7 @@ app.get("/raad-het-boek", async function (req, res) {
 <img width="785" alt="Data lifecycle diagram legenda" src="https://user-images.githubusercontent.com/43877754/236639192-90cecee8-b2bb-47e0-b0aa-d8a4f2bf69e2.png">
 
 ### Uitbereiding versie 1: Socket.io client server
+
 <img width="1058" alt="datalifecycle" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/bd801e40-760b-40ff-ba0c-c655bc871a10">
 
 ## Real-time events
