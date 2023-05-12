@@ -5,7 +5,7 @@ BookBuddies is een app waar je boeken kunt raden en er vervolgens een chatroom o
 <img width="1440" alt="homepage_real_time_web" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/cb814b50-254a-4c2b-a477-766d67de7f37">
 
 
-Bekijk mijn live demo [hier]([https://bookbuddies.adaptable.app/](https://real-time-web-2223.up.railway.app/)
+Bekijk mijn live demo [hier](https://bookbuddies.adaptable.app/](https://real-time-web-2223.up.railway.app/)
 
 ## Inhoud
 
