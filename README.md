@@ -26,6 +26,8 @@ Bekijk mijn live demo [hier](https://real-time-web-2223.up.railway.app/)
 - [Data lifecycle diagram](#data-lifecycle-diagram)
   - [Versie 1](#versie-1)
 - [Real-time events](#real-time-events)
+- [Mijn proces](#mijn-proces)
+- [Het eindresultaat](#het-eindresultaat)
 - [License](#license)
 - [Bronnen](#bronnen)
 
@@ -209,7 +211,7 @@ Het volledige response van een boek uit de lijst van 20 in JSON ziet er als volg
 
 ## Data modelling
 
-Hier kun je mijn data models bekijken:
+Om in kaart te brengen wat ik allemaal nodig heb uit mijn API call heb ik een data model gemaakt. Wanneer je een call doet naar de API krijg je een lijst met verschillende boeken terug. In deze lijst krijg je voor elk boek onder andere deze data terug, waarvan ik gebruik wil maken:
 
 ### Versie 1
 
@@ -243,6 +245,8 @@ app.get("/raad-het-boek", async function (req, res) {
 
 ## Data lifecycle diagram
 
+Ik heb twee soorten data lifecycle diagrammen gemaakt, bij de eerst zie je het pad die de gebruiker zou moeten bewandelen. Met daaronder een legenda die uitlegt wat de verschillende kleuren en vormen precies betekenen. Bij de tweede zie je wat er gebeurd met de de verschillende sockets die ik heb aangemaakt. Er word data van de client naar de server gestuurd en andersom.
+
 ### Versie 1
 
 <img width="1426" alt="Data lifecycle diagram" src="https://user-images.githubusercontent.com/43877754/236639190-126fd2f5-b482-4f27-b669-b07a11b19989.png">
@@ -256,6 +260,136 @@ app.get("/raad-het-boek", async function (req, res) {
 <img width="1058" alt="datalifecycle" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/bd801e40-760b-40ff-ba0c-c655bc871a10">
 
 ## Real-time events
+
+<details>
+  <summary>Socket event: Connection</summary>
+ Als de gebruiker verbinding heeft gemaakt met de server komt er in de console aan de kant van de server te staan dat er een gebruiker verbonden is. Dit doe je door de volgende code te gebruiken:
+
+```javascript
+//Serverside
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected"); // Log user when disconnected
+  });
+});
+```
+
+In de code zie je ook dat er een disconnect event is. Dit event word aangeroepen wanneer de gebruiker de verbinding verbreekt. Wanneer de gebruiker de verbinding verbreekt komt er in de console aan de kant van de server te staan dat de gebruiker is disconnected. Op deze manier weet je wanneer de gebruiker diconnected is.
+
+</details>
+<details>
+  <summary>Socket event: Get API</summary>
+  Wanneer je de website opent word er een socket event aangeroepen die de API ophaalt door een emit naar de server te sturen. Dit doe je met de volgende code aan de clientside:
+
+```javascript
+// Clientside
+function getAPI() {
+  socket.emit("getAPI"); // Send getAPI to server
+}
+```
+
+In server.js maak je vervolgens een socket event aan die luistert naar getAPI. Wanneer deze socket event word aangeroepen word er een functie aangeroepen die de API ophaalt en een random boek uit de resultaten haalt. Dit doe je met de volgende code:
+
+```javascript
+// Serverside
+socket.on("getAPI", async () => {
+  // Listen for getAPI
+  books = await fetchGenre(genre); // Fetch books by genre
+
+  currentBook = await getRandomBook(); // Get random book
+
+  console.log("Current Book: " + currentBook);
+
+  socket.emit("randomBook", currentBook); // Send random book to client
+});
+
+async function fetchGenre(genre) {
+  const bookQueryByGenre = await fetch(
+    `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&orderBy=relevance&maxResults=20&key=${process.env.API_KEY}`
+  ); // Fetch books by genre
+  const result = await bookQueryByGenre.json(); // Convert to JSON
+  return result.items.map((item) => item.volumeInfo); // Return array of books
+}
+
+function getRandomBook() {
+  const randomBookIndex = Math.floor(Math.random() * books.length); // Get random book index
+  return books[randomBookIndex]; // Return random book
+}
+```
+
+Het random boek word vervolgens naar de client gestuurd door middel van een emit. Deze word dan aan de clientside aangemaakt en hierin word de data opgeslagen in een variable. Dit doe je met de volgende code:
+
+```javascript
+// Clientside
+socket.on("randomBook", (data) => {
+  currentBook = data; // Set currentBook to data
+  showNewBook(); // Call showNewBook function
+});
+```
+
+</details>
+<details>
+  <summary>Socket event: New User</summary>
+  
+  ``` javascript
+  // Clientside
+  socket.emit('newUser', { username: username });
+  ```
+  ``` javascript
+  // Serverside
+  socket.on('newUser', (data) => {
+    username = data.username; // Set username to data.username
+    const user = { // Create user object with username and socket id
+        username: data.username,
+        id: socket.id,
+        bookToCheck: ''
+    }
+    users.push(user); // Push user to users array
+    io.emit('users', users); // Send users to client
+});
+````
+hallo
+``` javascript
+// Clientside
+socket.on('users', (data) => {
+  users = data; // Set users to data
+});
+````
+
+</details>
+<details>
+  <summary>Socket event: Try Title Book</summary>
+  hallo
+</details>
+<details>
+  <summary>Socket event: Book Check</summary>
+  hallo
+</details>
+<details>
+  <summary>Socket event: Creat Room</summary>
+  hallo
+</details>
+<details>
+  <summary>Socket event: Open Chat</summary>
+  hallo
+</details>
+<details>
+  <summary>Socket event: History</summary>
+  hallo
+</details>
+<details>
+  <summary>Socket event: Chat</summary>
+  hallo
+</details>
+<details>
+  <summary>Socket event: Typing</summary>
+  hallo
+</details>
+
+## Mijn proces
+
+## Het eindresultaat
 
 ## License
 
