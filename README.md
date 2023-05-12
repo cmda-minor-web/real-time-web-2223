@@ -2,9 +2,9 @@
 
 BookBuddies is een app waar je boeken kunt raden en er vervolgens een chatroom over kunt starten.
 
-(Image of my project)
+<img width="1440" alt="homepage_real_time_web" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/cb814b50-254a-4c2b-a477-766d67de7f37">
 
-Bekijk mijn live demo [hier](https://bookbuddies.adaptable.app/).
+Bekijk mijn live demo [hier]([https://bookbuddies.adaptable.app/](https://real-time-web-2223.up.railway.app/).
 
 ## Inhoud
 
@@ -241,7 +241,8 @@ app.get("/raad-het-boek", async function (req, res) {
 
 <img width="785" alt="Data lifecycle diagram legenda" src="https://user-images.githubusercontent.com/43877754/236639192-90cecee8-b2bb-47e0-b0aa-d8a4f2bf69e2.png">
 
-### Uitbereiding versie 1
+### Uitbereiding versie 1: Socket.io client server
+<img width="1058" alt="datalifecycle" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/bd801e40-760b-40ff-ba0c-c655bc871a10">
 
 ## Real-time events
 
