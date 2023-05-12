@@ -105,7 +105,7 @@ if (titleBtn) { // Check if titleBtn exists
 if (openChatButton) {
   openChatButton.addEventListener('click', (e) => {
     if (!currentBook) return; // Check if currentBook exists
-    const roomName = currentBook; // Set roomName to currentBook
+    // const roomName = currentBook; // Set roomName to currentBook
 
     // socket.emit('createRoom', roomName); // Create room
     // console.log('Room created: ' + roomName);
@@ -184,7 +184,7 @@ socket.on('history', (history) => {
   history.forEach((data) => {
     addMessage(data) // Call addMessage function
   })
-})
+});
 
 socket.on('chat', (data, username) => {
   let li = document.createElement('li'); // Create li element
@@ -200,7 +200,7 @@ socket.on('chat', (data, username) => {
   messages.appendChild(li); // Append li to messages
   typingState.innerHTML = ""; // Set innerHTML of typingState to empty string
   messages.scrollTop = messages.scrollHeight; // Set scrollTop of messages to scrollHeight
-})
+});
 
 let typingTimer;
 const typingDelay = 3000; // when user stops typing, after 3 seconds, the typing state will be cleared
