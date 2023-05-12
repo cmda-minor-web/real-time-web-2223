@@ -217,8 +217,6 @@ Het volledige response van een boek uit de lijst van 20 in JSON ziet er als volg
 
 Om in kaart te brengen wat ik allemaal nodig heb uit mijn API call heb ik een data model gemaakt. Wanneer je een call doet naar de API krijg je een lijst met verschillende boeken terug. In deze lijst krijg je voor elk boek onder andere deze data terug, waarvan ik gebruik wil maken:
 
-### Versie 1
-
 ![Datamodel Versie 1](https://user-images.githubusercontent.com/43877754/236639166-bcf0f59f-772f-4428-bbe8-214e7ac9bc8c.jpeg)
 
 ## Spike solution
@@ -251,15 +249,13 @@ app.get("/raad-het-boek", async function (req, res) {
 
 Ik heb twee soorten data lifecycle diagrammen gemaakt, bij de eerst zie je het pad die de gebruiker zou moeten bewandelen. Met daaronder een legenda die uitlegt wat de verschillende kleuren en vormen precies betekenen. Bij de tweede zie je wat er gebeurd met de de verschillende sockets die ik heb aangemaakt. Er word data van de client naar de server gestuurd en andersom.
 
-### Versie 1
-
 <img width="1426" alt="Data lifecycle diagram" src="https://user-images.githubusercontent.com/43877754/236639190-126fd2f5-b482-4f27-b669-b07a11b19989.png">
 
 #### Legenda:
 
 <img width="785" alt="Data lifecycle diagram legenda" src="https://user-images.githubusercontent.com/43877754/236639192-90cecee8-b2bb-47e0-b0aa-d8a4f2bf69e2.png">
 
-### Uitbereiding versie 1: Socket.io client server
+### Uitbereiding: Socket.io client server
 
 <img width="1058" alt="datalifecycle" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/bd801e40-760b-40ff-ba0c-c655bc871a10">
 
