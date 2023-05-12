@@ -27,6 +27,8 @@ Bekijk mijn live demo [hier](https://real-time-web-2223.up.railway.app/)
   - [Versie 1](#versie-1)
 - [Real-time events](#real-time-events)
 - [Mijn proces](#mijn-proces)
+  - [Uitleg over branches](#uitleg-over-branches)
+  - [Reflectie](#reflectie)
 - [Het eindresultaat](#het-eindresultaat)
 - [License](#license)
 - [Bronnen](#bronnen)
@@ -85,7 +87,9 @@ Je kunt jouw versie van je applicatie live te hosten kun je gebruik maken van Ad
 
 ## Hoe gebruik je dit project?
 
-Om te kunnen beginnen met het raden van het geblurde boek moet de gebruiker eerst een username en een genre opgeven. Als de gebruiker dit heeft gedaan kan de gebruiker beginnen met het raden van het boek. Als de gebruiker het boek geraden heeft kan hij een chatroom starten over dat boek of een nieuw boek raden. Wanneer de gebruiker een fout antwoord geeft op het raden van het boek word het boek drie keer minder geblurd gemaakt. Bij de vierde keer dat het fout geraden word krijgt hij de cover te zien en kan hij of een chatroom starten of een nieuw boek raden. In de chatroom is het de bedoeling dat de gebruikers met elkaar over de boeken kunnen praten.
+Om te kunnen beginnen met het raden van het geblurde boek moet de gebruiker eerst een username en een genre opgeven. Als de gebruiker dit heeft gedaan kan de gebruiker beginnen met het raden van het boek. Als de gebruiker het boek geraden heeft kan hij een chatroom starten over dat boek of een nieuw boek raden. Wanneer de gebruiker een fout antwoord geeft op het raden van het boek word het boek drie keer minder geblurd gemaakt. Bij de vierde keer dat het fout geraden word krijgt de gebruiker de cover te zien en kan de gebruiker of een chatroom starten of een nieuw boek raden. In de chatroom is het de bedoeling dat de gebruikers met elkaar over de boeken kunnen praten.
+
+Om het boek te goed te kunnen raden en dus te winnen kun je in de inspector bij de alt tekst kijken en zo het goede antwoord invullen.
 
 ## Coding style
 
@@ -430,20 +434,65 @@ socket.on("bookCheck", (usernameInput, bookTitleInput) => {
 </details>
 <details>
   <summary>Socket event: Creat Room</summary>
-  hallo
+  Ik ben aan de slag gegaan met het toevoegen van rooms dit is alleen nog niet geheel gelukt, maar ik laat toch het begin zien.
+
+Wanneer je op de button klikt om te naar de chatroom te gaan word er met een socket.emit createRoom naar de server gestuurd met roomName. RoomName heeft de naam van de room wat het boek is dat is geraden.
+
+```javascript
+socket.emit("createRoom", roomName);
+```
+
+Serverside heb ik dan een socket.on aangemaakt met createRoom hierin kijk ik eerst of er wel een roomname is en daarna ga ik kijken of er in activeRooms al een room is met de meegegeven naam. Als dit het geval is join je die room en wordt de roomname en user naar de client gestuurd in roomJoined.
+
+Wanneer de roomName er nog niet is word deze aangemaakt en naar activeRooms gepushed, daarna worden de roomName en username via socket.emit roomCreated naar de client gestuurd.
+
+```javascript
+// Serverside
+socket.on("createRoom", (roomName) => {
+  const socketRooms = socket.rooms;
+  if (!roomName) {
+    console.log("No roomname");
+    return;
+  }
+  if (activeRooms.includes(roomName)) {
+    socket.join(`${roomName}`); // Join room
+    socket.emit("roomJoined", roomName, username); // Send roomName and username to client
+  } else {
+    // If activeRooms does not include roomName
+    activeRooms.push(roomName); // Push roomName to activeRooms
+    socket.emit("roomCreated", roomName, username); // Send roomName and username to client
+  }
+});
+```
+
+Vervolgens krijg je op de client nu alleen nog een console.log met daarin of je een room bent gejoind of dat er een room is aangemaakt. Verder was is nog niet gekomen.
+
+```javascript
+socket.on("roomCreated", (roomName, username) => {
+  console.log("Room created: " + roomName + " with user " + username);
+});
+
+socket.on("roomJoined", ({ roomName, username }) => {
+  console.log(`${username} joined room ${roomName}`);
+});
+```
+
 </details>
 <details>
   <summary>Socket event: Open Chat</summary>
-  hallo
+  Met de `socket.emit('openChat')` zorg ik ervoor dat vanaf de server de currentUser wordt gestuurd naar de client. Om zo te checken of deze gelijk zijn.
 
 ```javascript
 // Serverside
 socket.emit("openChat", currentUser);
 ```
 
+In de client kijk ik dan in openChat of er een chatForm is zoja wanneer er dan op submit wordt geklikt word er het ingevulde bedricht en de username naar de server verzonden via `socket.emit("chat", data);`. Daarna wordt de value van het input veld leeg gemaakt.
+
 ```javascript
 // Clientside
 socket.on("openChat", (currentUser) => {
+  console.log(currentUser);
   if (chatForm) {
     chatForm.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -458,12 +507,14 @@ socket.on("openChat", (currentUser) => {
 </details>
 <details>
   <summary>Socket event: Chat</summary>
-  hallo
+  In Socket event: Open Chat heb ik uitgelegd wat er in de `socket.emit("chat", data);` word meegestuurd naar de server.
 
 ```javascript
 // Clientside
 socket.emit("chat", data);
 ```
+
+Op de server word de username veranderd naar de username die wordt meegestuurd via de data. Daarna word er gegeken of de lengte van de history groter is dan de historySize van 50. Als dit het geval is word er wat uit de history verwijderd. Daarna word de dat naar de history gepushed en wordt de data en username naar de client gestuurd.
 
 ```javascript
 // Serverside
@@ -477,19 +528,117 @@ socket.on("chat", (data) => {
 });
 ```
 
+In de client geef ik aan de socket.on data en username mee. Hierin maakt een een li element in deze li voeg ik de naam van dus user die het bericht stuurt toe en het bericht. Dan voeg ik de li toe aan messages wat een ul is en maak ik de typingStage leeg. Als laatste zorg ik er voor dat de berichten om hoog scrollen zodat het laatst gestuurde bericht zichtbaar is.
+
+```javascript
+// Clientside
+socket.on("chat", (data, username) => {
+  let li = document.createElement("li");
+  li.innerHTML = `<p id="name">${data.name}</p><p id="message"></p>: ${data.message}`;
+  messages.appendChild(li); // Append li to messages
+  typingState.innerHTML = ""; // Set innerHTML of typingState to empty string
+  messages.scrollTop = messages.scrollHeight; // Set scrollTop of messages to scrollHeight
+});
+```
+
 </details>
 <details>
   <summary>Socket event: History</summary>
-  hallo
+  Ik stuur de array met de berichten uit de geschiedenis van de server naar de client via de volgende code:
+
+```javascript
+// Serverside
+socket.emit("history", history);
+```
+
+Vervolgens haal ik deze op in de client en ga ik die een voor een langs, zodat de berichten goed worden weergegeven.
+
+```javascript
+// Clientside
+socket.on("history", (history) => {
+  history.forEach((data) => {
+    addMessage(data);
+  });
+});
+```
+
 </details>
 <details>
   <summary>Socket event: Typing</summary>
-  hallo
+  Wanneer de gebruiker in het inputveld van de chatroom aan het typen is word er een emit naar de server gestuurd met de naam van de currentUser.
+
+```javascript
+// Clientside
+inputText.addEventListener("keypress", () => {
+  socket.emit("typing", currentUser);
+});
+```
+
+Er wordt gezorgt dat er naar iedereen in de chatroom behalve naar de persoon die aan het typen is data wordt verstuurd.
+
+```javascript
+//Serverside
+socket.on("typing", (data) => {
+  socket.broadcast.emit("typing", data);
+});
+```
+
+In typingState wordt de data die van de server is gestuurd de tekst username is typing... geplaatst bij iedereen behalve de persoon die aan het typen is.
+
+```javascript
+socket.on("typing", (data) => {
+  typingState.textContent = `${data.username} is typing...`;
+});
+```
+
+Doormiddel van een setTimeout word er gekeken hoelang er al niet is getyped, wanneer er voor een bepaalde periode niet meer is getyped word dit naar de server gestuurd.
+
+```javascript
+// Clientside
+typingTimer = setTimeout(() => {
+  socket.emit("stopTyping");
+}, typingDelay);
+```
+
+De server zorgt er dan voor dat er bij iedereen het bericht aan het typen weggaat.
+
+```javascript
+socket.on("stopTyping", () => {
+  socket.broadcast.emit("stopTyping");
+});
+```
+
+StopTyping word van de server ontvangen op de client en daardoor wordt de typingState vervangen naar een lege string.
+
+```javascript
+socket.on("stopTyping", () => {
+  typingState.textContent = "";
+});
+```
+
 </details>
 
 ## Mijn proces
 
+Het was een heel proces met ups en downs om uiteindelijk tot dit resultaat te komen. Daarom ga ik in hier wat schrijven over wat ik allemaal heb gedaan gedurende dit vak.
+
+Ik ben begonnen met het bouwen van een multiple page website, omdat ik nog niet wist dat het handiger is om een singlepage website te maken met sockets. In mijn multiple page website kon je van de pagina waar je je username op geeft naar /raad-het-boek en daarna naar /chat. Van de homepage waar je je username invult naar de pagina /raad-het-boek kon ik makkelijk de username doorgeven en op de /raad-het-boek pagina gebruiken, maar ik kwam er uiteindelijk achter dat ik de username niet naar de /chat pagina kon doorgeven. Dit kwam doordat wanneer je van pagina wisseld de JavaScript opnieuw word geladen en er dus geen username gevonden kon worden.
+
+Dit heb ik op verschillende manieren geprobeerd op te lossen. Zo heb ik geprobeerd om het via de users serverside mee te geven wie de currentUser is, met localStorage geprobeerd op te slaan, de username meegeven in de link en met express session. Helaas lukt of werkt dit allemaal helaas niet. Via de server met users werkt niet doordat dit dan op de manier hoe ik het deed bij allemaal gebeurde. Door het op te slaan in localStorage kon je niet in meerdere tabbladen verschillende users aanmaken, omdat hij met localStorage de username opslaat en dan heet je in elk tabblad zo. Door het in de link mee te geven ging het ook niet helemaal goed want daardoor werden de gebruikers uiteindelijk allemaal hetzelfde. Als laatste heb ik nog geprobeerd om met session te gaan werken, maar dit vond ik uiteindelijk te lastig.
+
+Hierdoor was de makkelijkste manier om het om te bouwen naar een singlepage website. Dit koste wel wat tijd en per onderdeel kijken wat er aangepast moest worden om het weer werkent te krijgen. Maar uiteindelijk werkt het allemaal. Waar ik erg blij mee ben.
+
+### Uitleg over branches
+
+Doordat ik uiteindelijk mijn werk van een multiple page website naar een singlepage website heb omgebouwd ben ik in branches gaan werken. Als je naar mijn werk van multiple pages wilt bekijken kun je naar de branch `multiplepages` gaan.
+
+### Reflectie
+
+Ik vond real time web een erg lastig maar wel een erg leerzaam vak. Zo heb ik in een hele korte tijd toch geleerd hoe je een chat functie en een raad het boek functie kunt maken met socket.io. Wel had ik liever nog wat langer de tijd gehad om er dieper in te kunnen duiken en er meer van te kunnen begrijpen. Het is nu allemaal net te snel gegaan, waardoor ik het op sommige momenten niet helemaal meer zag zitten. Uiteindelijk lijkt het mij toch leuk om er later nog een keer wat mee te maken en er meer over te leren.
+
 ## Het eindresultaat
+
+Het eindresultaat is een singlepage webapp geworden waar je een username kan opgeven, boeken van het genre thriller kan raden en daarna met anderen gebruikers kan chatten over boeken. Hieronder zal ik afbeeldingen toevoegen van het eindresultaat.
 
 ## License
 
@@ -497,6 +646,7 @@ Dit project valt onder de MIT License. Voor meer informatie over de MIT License 
 
 ## Bronnen
 
+- Docenten en medestudenten
 - [Google Books API](https://developers.google.com/books/docs/v1/using)
 - [Socket.io Documentatie](https://socket.io/docs/v4/client-installation/)
 - [Handleiding van het toevoegen van Handlebars](https://waelyasmina.medium.com/a-guide-into-using-handlebars-with-your-express-js-application-22b944443b65)
