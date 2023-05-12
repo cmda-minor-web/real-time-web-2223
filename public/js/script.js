@@ -54,8 +54,6 @@ if (startGame) { // Check if startGame exists
     usernameInput.value = username; // Set value of unsernameInput to username
 
     showNewBook()
-
-    socket.emit('bookCheck', username, bookTitleInput.value); // Send username and bookTitleInput.value to server
   });
 }
 
@@ -65,11 +63,11 @@ function guessNewBook() {
   // New book to guess
   retryButton.addEventListener('click', (e) => {
     e.preventDefault();
-
-    gameText.setAttribute('class', 'hidden');    // Hide gameText
-    bookImage.classList.remove('win'); // Remove win class from bookImage
+    guessForm.setAttribute('class', 'show');
+    titleBook.value = ''; // Set value of bookTitleInput to empty string
+    gameText.setAttribute('class', 'hidden'); // Hide gameText
+    bookImage.classList.remove('win', 'lose1', 'lose2', 'lose3', 'lose4'); // Remove win class from bookImage
     getAPI();
-
   });
 }
 
@@ -81,6 +79,8 @@ function showNewBook() {
   bookTitleInput.value = currentBook.title; // Set value of bookTitleInput to currentBook.title
   bookImage.setAttribute('src', currentBook.imageLinks.thumbnail); // Set src of bookImage to data.image
   bookImage.setAttribute('alt', currentBook.title); // Set alt of bookImage to data.title 
+
+  socket.emit('bookCheck', username, bookTitleInput.value); // Send username and bookTitleInput.value to server
 }
 
 socket.on('randomBook', (data) => {
@@ -155,7 +155,7 @@ socket.on('lose', (data) => {
     gameText.textContent = 'Helaas het gegeven antwoord is incorrect. Probeer het nog een keer.'; // Set textContent of gameText
   } else if (loses === 4) { // Check if loses is equal to 4
     bookImage.classList.add('lose4'); // Add lose4 class to bookImage
-    guessForm.remove(); // Remove guessForm
+    guessForm.setAttribute('class', 'hidden'); // Hide guessForm
 
     gameText.setAttribute('class', 'show'); // Show gameText
     gameText.textContent = 'Helaas je hebt het antwoord niet geraden. Het antwoord was ' + currentBook; // Set textContent of gameText
@@ -226,6 +226,6 @@ socket.on('stopTyping', () => {
 });
 
 function addMessage(data) {
-  messages.appendChild(Object.assign(document.createElement('li'), { textContent: data.name + ': ' + data.message })) // Append li to messages
+  messages.appendChild(Object.assign(document.createElement('li'), { innerHTML: `<p id="name">${data.name}</p><p id="message"></p>: ${data.message}` })) // Append li to messages
   messages.scrollTop = messages.scrollHeight // Set scrollTop of messages to scrollHeight
 }

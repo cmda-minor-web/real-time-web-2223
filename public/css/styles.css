@@ -141,8 +141,13 @@ span.username, span.genre {
 }
 
 .guess-book section {
+  padding: 0 2em;
   display: grid;
   place-items: center;
+}
+
+.guess-book section form {
+  margin-bottom: 1rem;
 }
 
 .guess-book section div {
@@ -185,6 +190,10 @@ span.username, span.genre {
   margin: 0.5rem 0;
 }
 
+#open-chat {
+  margin-bottom: 0.5em;
+}
+
 /* SECTION: CHAT */
 body.open-chat {
   grid-template-columns: 6.25rem 1fr;
@@ -194,16 +203,23 @@ body.open-chat {
   height: calc(100dvh - 6.25rem);
 }
 
+.chat section form {
+  position: absolute;
+  bottom: 0;
+}
+
 fieldset {
   border: none;
   margin: 0.5rem 0;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .chat ul {
-  list-style-type: none;
+  height: 72dvh;
   padding: 0.5rem;
+  list-style-type: none;
   overflow-y: scroll;
-  height: 100%;
 }
 
 .chat ul li {
