@@ -331,40 +331,102 @@ socket.on("randomBook", (data) => {
 </details>
 <details>
   <summary>Socket event: New User</summary>
-  
-  ``` javascript
-  // Clientside
-  socket.emit('newUser', { username: username });
-  ```
-  ``` javascript
-  // Serverside
-  socket.on('newUser', (data) => {
-    username = data.username; // Set username to data.username
-    const user = { // Create user object with username and socket id
-        username: data.username,
-        id: socket.id,
-        bookToCheck: ''
-    }
-    users.push(user); // Push user to users array
-    io.emit('users', users); // Send users to client
-});
-````
-hallo
-``` javascript
+  Wanneer een gebruiker zijn username heeft opgegeven wordt deze toegevoegd aan een lijst met users. Dit gebeurd door een socket emit waarbij de username wordt meegestuurd. Dit heb ik als volgt gedaan:
+
+```javascript
 // Clientside
-socket.on('users', (data) => {
+socket.emit("newUser", { username: username });
+```
+
+Dan word er aan de serverside een nieuwe socket.on aangemaakt met new user waar in een object de username, id en bookToCheck worden toegevoegd. Wanneer deze onderdelen zijn angemaakt worden deze naar de variable users gepust, zodat er een lijst van gebruikers ontstaat. Vervolgens worden deze users naar de client gestuurd doormiddel van de io.emit.
+
+```javascript
+// Serverside
+socket.on("newUser", (data) => {
+  username = data.username; // Set username to data.username
+  const user = {
+    // Create user object with username and socket id
+    username: data.username,
+    id: socket.id,
+    bookToCheck: "",
+  };
+  users.push(user); // Push user to users array
+  io.emit("users", users); // Send users to client
+});
+```
+
+In de client word de data met de users in een variabel users gestopt.
+
+```javascript
+// Clientside
+socket.on("users", (data) => {
   users = data; // Set users to data
 });
-````
+```
 
 </details>
 <details>
   <summary>Socket event: Try Title Book</summary>
-  hallo
+  Via de `socket.emit('tryTitleBook')` worden ook de value uit een input waar de gebruiker de titel van het boek heeft ingevuld en de username meegestuurd naar de server.
+
+```javascript
+// Clientside
+socket.emit("tryTitleBook", titleBook.value, usernameInput.value);
+```
+
+Vervolgens heb ik in de serverside een socket.on aan gemaakt met daarin het antwoord dat de gebruiker heeft ingevuld en de username. Eerst word het boek dat geraden moet worden toegevoegd aan de user. Vervolgens word er gekeken of het antwoord dat de gebruiker heeft gegeven ook gelijk is aan het boek dat moet worden geraden. Als dit het geval is word er een `socket.emit('win')` naar de client gestuurd met de currentBookTitle. Wanneer dit niet het geval is word er een `socket.emit('lose')` naar de client gestuurd met de currentBooTitle.
+
+```javascript
+//Serverside
+socket.on("tryTitleBook", async (titleBook, usernameInput) => {
+  const guessedTitleBook = titleBook.toLowerCase();
+  let book = "";
+  users.forEach((user) => {
+    if (user.username == usernameInput) {
+      console.log("BookCheck user book " + user.bookToCheck);
+      book = user.bookToCheck;
+    }
+  });
+
+  const currentBookTitle = book;
+  console.log("currentBookTitle: " + currentBookTitle);
+  const currentBookTitleLowerCase = currentBookTitle.toLowerCase();
+
+  if (guessedTitleBook === currentBookTitleLowerCase) {
+    socket.emit("win", currentBookTitle);
+  } else {
+    socket.emit("lose", currentBookTitle);
+  }
+});
+```
+
+Aan de clientside maak ik dan een `socket.on('win')` en `socket.on('lose')` aan die laten zien wat er wel en niet weergeven moet worden.
+
 </details>
 <details>
   <summary>Socket event: Book Check</summary>
-  hallo
+  Elke keer dat er een nieuw book wordt aangemaakt word er een via de `socket.emit('book Check')` de username en de titel van het boek meegegeven.
+
+```javascript
+// clientside
+socket.emit("bookCheck", username, bookTitleInput.value);
+```
+
+Aan de serverside heb ik een socket.on aangemaakt hierin word het meegegeven book aan de variabel users toegevoegd aan de user die het boek aan het raden is.
+
+```javascript
+// Serverside
+socket.on("bookCheck", (usernameInput, bookTitleInput) => {
+  users.forEach((user, i) => {
+    if (user.username == usernameInput) {
+      currentUser = usernameInput;
+      user.bookToCheck = bookTitleInput;
+      users[i] = user;
+    }
+  });
+});
+```
+
 </details>
 <details>
   <summary>Socket event: Creat Room</summary>
@@ -373,13 +435,51 @@ socket.on('users', (data) => {
 <details>
   <summary>Socket event: Open Chat</summary>
   hallo
-</details>
-<details>
-  <summary>Socket event: History</summary>
-  hallo
+
+```javascript
+// Serverside
+socket.emit("openChat", currentUser);
+```
+
+```javascript
+// Clientside
+socket.on("openChat", (currentUser) => {
+  if (chatForm) {
+    chatForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      let data = { name: username, message: inputText.value };
+      socket.emit("chat", data);
+      inputText.value = "";
+    });
+  }
+});
+```
+
 </details>
 <details>
   <summary>Socket event: Chat</summary>
+  hallo
+
+```javascript
+// Clientside
+socket.emit("chat", data);
+```
+
+```javascript
+// Serverside
+socket.on("chat", (data) => {
+  username = data.username;
+  while (history.length > historySize) {
+    history.shift();
+  }
+  history.push(data);
+  io.sockets.emit("chat", data, username);
+});
+```
+
+</details>
+<details>
+  <summary>Socket event: History</summary>
   hallo
 </details>
 <details>
