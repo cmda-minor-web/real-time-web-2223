@@ -1,6 +1,6 @@
 # BookBuddies
 
-BookBuddies is een app waar je boeken kunt raden en er vervolgens een chatroom over kunt starten.
+BookBuddies is een app waar je boeken kunt raden en vervolgens een chatroom kunt starten om met andere gebruiker over boeken te praten.
 
 <img width="1440" alt="homepage_real_time_web" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/cb814b50-254a-4c2b-a477-766d67de7f37">
 
