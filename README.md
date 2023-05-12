@@ -1,4 +1,4 @@
-# 🔗 [Sundous individuele opdracht is Sundous branche van dit repo.](https://github.com/SundousKanaan/RTW-Groep/tree/sundous)
+# 🔗 [Sundous individuele opdracht is Sundous branche van dit repo.](https://github.com/SundousKanaan/RTW-Groep/tree/Sundous)
 
 ---
 ---
