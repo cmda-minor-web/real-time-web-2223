@@ -35,33 +35,6 @@ let genreChosen = false;
 let loses = 0;
 let currentBook;
 
-// Functions
-// function guessNewBook() {
-//   // New book to guess
-//   retryButton.addEventListener('click', (e) => {
-//     e.preventDefault();
-//     console.log('Show new book1' + JSON.stringify(currentBook.title));
-//     getAPI();
-//     showNewBook();
-//   });
-// }
-
-function getAPI() {
-  socket.emit('getAPI'); // Send getAPI to server
-}
-
-function showNewBook() {
-  gameText.setAttribute('class', 'hidden'); // Hide gameText
-  let image = JSON.stringify(currentBook.imageLinks.thumbnail);
-  console.log('Show new book3' + image);
-  image = image.replace(/\"/g, "");
-
-  bookImage.setAttribute('src', currentBook.image); // Set src of bookImage to data.image
-  bookImage.setAttribute('alt', currentBook.title); // Set alt of bookImage to data.title
-  bookImage.classList.remove('win'); // Remove win class from bookImage
-}
-
-// Function calls
 getAPI();
 
 // Socket Events
@@ -77,20 +50,43 @@ if (startGame) { // Check if startGame exists
     const usernameBookPage = document.querySelector('span.username');
 
     usernameBookPage.textContent = username; // Set textContent of usernameBookPage to username
-    let image = JSON.stringify(currentBook.imageLinks.thumbnail); // Make image a string
-    image = image.replace(/\"/g, ""); // Remove quotes from image
-    bookImage.setAttribute('src', image); // Set src of bookImage to data.image
-    bookImage.setAttribute('alt', currentBook.title); // Set alt of bookImage to data.title
 
-    bookTitleInput.value = currentBook.title; // Set value of bookTitleInput to currentBook.title
     usernameInput.value = username; // Set value of unsernameInput to username
+
+    showNewBook()
 
     socket.emit('bookCheck', username, bookTitleInput.value); // Send username and bookTitleInput.value to server
   });
 }
 
+
+// Functions
+function guessNewBook() {
+  // New book to guess
+  retryButton.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    gameText.setAttribute('class', 'hidden');    // Hide gameText
+    bookImage.classList.remove('win'); // Remove win class from bookImage
+    getAPI();
+
+  });
+}
+
+function getAPI() {
+  socket.emit('getAPI'); // Send getAPI to server
+}
+
+function showNewBook() {
+  bookTitleInput.value = currentBook.title; // Set value of bookTitleInput to currentBook.title
+  bookImage.setAttribute('src', currentBook.imageLinks.thumbnail); // Set src of bookImage to data.image
+  bookImage.setAttribute('alt', currentBook.title); // Set alt of bookImage to data.title 
+}
+
 socket.on('randomBook', (data) => {
+  // console.table(data);
   currentBook = data; // Set currentBook to data
+  showNewBook(); // Call showNewBook function
 });
 
 socket.on('users', (data) => {
@@ -144,10 +140,9 @@ socket.on('win', (data) => {
   gameText.setAttribute('class', 'show'); // Show gameText
   gameText.textContent = 'Gewonnen! Het antwoord was ' + currentBook; // Set textContent of gameText
   openChatButton.setAttribute('class', 'show'); // Show openChatButton
-  // retryButton.setAttribute('class', 'show'); // Show retryButton
+  retryButton.setAttribute('class', 'show'); // Show retryButton
 
-  // guessNewBook() // Call guessNewBook function
-
+  guessNewBook() // Call guessNewBook function
 });
 
 socket.on('lose', (data) => {
@@ -165,9 +160,9 @@ socket.on('lose', (data) => {
     gameText.setAttribute('class', 'show'); // Show gameText
     gameText.textContent = 'Helaas je hebt het antwoord niet geraden. Het antwoord was ' + currentBook; // Set textContent of gameText
     openChatButton.setAttribute('class', 'show'); // Show openChatButton
-    // retryButton.setAttribute('class', 'show'); // Show retryButton
+    retryButton.setAttribute('class', 'show'); // Show retryButton
 
-    // guessNewBook() // Call guessNewBook function
+    guessNewBook() // Call guessNewBook function
   }
 });
 
