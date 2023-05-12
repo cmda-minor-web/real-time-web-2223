@@ -6,7 +6,7 @@ BookBuddies is een app waar je boeken kunt raden en er vervolgens een chatroom o
 
 <br>
 
-Bekijk mijn live demo [hier](https://bookbuddies.adaptable.app/](https://real-time-web-2223.up.railway.app/) 
+Bekijk mijn live demo [hier](https://real-time-web-2223.up.railway.app/) 
 
 ## Inhoud
 
