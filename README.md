@@ -4,7 +4,7 @@ BookBuddies is een app waar je boeken kunt raden en er vervolgens een chatroom o
 
 <img width="1440" alt="homepage_real_time_web" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/cb814b50-254a-4c2b-a477-766d67de7f37">
 
-<br>
+</br>
 
 Bekijk mijn live demo [hier](https://real-time-web-2223.up.railway.app/)
 
@@ -639,6 +639,21 @@ Ik vond real time web een erg lastig maar wel een erg leerzaam vak. Zo heb ik in
 ## Het eindresultaat
 
 Het eindresultaat is een singlepage webapp geworden waar je een username kan opgeven, boeken van het genre thriller kan raden en daarna met anderen gebruikers kan chatten over boeken. Hieronder zal ik afbeeldingen toevoegen van het eindresultaat.
+
+Homepage:
+<img width="1440" alt="homepage" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/6b4a8c3a-aea6-46e8-a41a-fdde5fbf92e2">
+
+Raad het boek:
+<img width="1440" alt="raad_het_book" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/855d05a6-f4cb-4a8d-bc39-f764137c269a">
+
+Verkeerde antwoord gegeven:
+<img width="1439" alt="verkeerde_antwoord" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/59041e22-488a-43da-b2b3-2272af64ed21">
+
+Goede antwoord gegeven:
+<img width="1440" alt="het_antwoord_is_goed" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/62e5e860-57ac-4216-8343-babf56d45e6c">
+
+Chatten met andere gebruikers:
+<img width="1440" alt="chat" src="https://github.com/Inevdhoven/real-time-web-2223/assets/43877754/acf1b8e9-d4ef-42e8-bb22-2b3231fd1346">
 
 ## License
 
