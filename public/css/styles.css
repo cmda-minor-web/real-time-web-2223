@@ -48,6 +48,7 @@
   /* COLORS */
   --primary-color: rgb(55, 114, 255);
   --secondary-color: #FE4A49;
+  --trinary-color: rgb(40, 77, 162);
   --background-color: rgba(112, 228, 239, 0.3);
   --black: rgb(32, 32, 32);
   --white: rgb(255, 255, 255);
@@ -146,16 +147,76 @@ span.username, span.genre {
 
 .guess-book section div {
   border-radius: 0.5rem;
-  margin: 1em;
+  margin: 1.5em 0;
   display: inline-block;
   overflow: hidden;
 }
 
-.guess-book div img {
+.guess-book img.book-image {
+  border-radius: 0.5rem;
   filter: blur(0.5em);
   -webkit-user-drag: none; 
   -moz-user-drag: none; 
   -ms-user-drag: none;
 }
 
+.guess-book img.book-image.lose1 {
+  filter: blur(0.35em);
+}
+
+.guess-book img.book-image.lose2 {
+  filter: blur(0.2em);
+}
+
+.guess-book img.book-image.lose3 {
+  filter: blur(0.15em);
+}
+
+.guess-book img.book-image.win,
+.guess-book img.book-image.lose4 {
+  filter: blur(0);
+}
+
+.guess-book section form label p {
+  margin-bottom: 0.5rem;
+}
+
+#game-text {
+  margin: 0.5rem 0;
+}
+
 /* SECTION: CHAT */
+body.open-chat {
+  grid-template-columns: 6.25rem 1fr;
+}
+
+.chat {
+  height: calc(100dvh - 6.25rem);
+}
+
+fieldset {
+  border: none;
+  margin: 0.5rem 0;
+}
+
+.chat ul {
+  list-style-type: none;
+  padding: 0.5rem;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.chat ul li {
+  max-width: fit-content;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  background-color: var(--trinary-color);
+  color: var(--white);
+}
+
+.chat ul li p#name {
+  font-family: 'Montserrat Bold', sans-serif;
+}
+

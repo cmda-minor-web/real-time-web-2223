@@ -114,7 +114,9 @@ if (openChatButton) {
     // socket.emit('createRoom', roomName); // Create room
     // console.log('Room created: ' + roomName);
 
-    bookSection.setAttribute('class', 'guess-book hidden'); // Hide bookSection
+    const body = document.querySelector('body');
+    body.setAttribute('class', 'chat-open'); // Set class on body
+    guessBookSection.setAttribute('class', 'guess-book hidden'); // Hide bookSection
     chatSection.setAttribute('class', 'chat show'); // Show chatSection
   });
 }
@@ -142,7 +144,7 @@ socket.on('win', (data) => {
   gameText.setAttribute('class', 'show'); // Show gameText
   gameText.textContent = 'Gewonnen! Het antwoord was ' + currentBook; // Set textContent of gameText
   openChatButton.setAttribute('class', 'show'); // Show openChatButton
-  retryButton.setAttribute('class', 'show'); // Show retryButton
+  // retryButton.setAttribute('class', 'show'); // Show retryButton
 
   // guessNewBook() // Call guessNewBook function
 
@@ -163,7 +165,7 @@ socket.on('lose', (data) => {
     gameText.setAttribute('class', 'show'); // Show gameText
     gameText.textContent = 'Helaas je hebt het antwoord niet geraden. Het antwoord was ' + currentBook; // Set textContent of gameText
     openChatButton.setAttribute('class', 'show'); // Show openChatButton
-    retryButton.setAttribute('class', 'show'); // Show retryButton
+    // retryButton.setAttribute('class', 'show'); // Show retryButton
 
     // guessNewBook() // Call guessNewBook function
   }
@@ -191,7 +193,7 @@ socket.on('history', (history) => {
 
 socket.on('chat', (data, username) => {
   let li = document.createElement('li'); // Create li element
-  li.textContent = data.name + ': ' + data.message; // Set textContent of li to data.name and data.message
+  li.innerHTML = `<p id="name">${data.name}</p><p id="message"></p>: ${data.message}`; // Set textContent of li to data.name and data.message
   console.log(data.name + ': ' + data.message) // Log data.name and data.message
 
   // Check if the message is sent by the user
